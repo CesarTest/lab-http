@@ -1,0 +1,26 @@
+---
+######################################################################
+#                           BOX PROVIDERUPLOAD
+######################################################################
+- name: "BOX PROVIDER UPLOAD"
+  vars:
+    box_src:  "{{ box_provider.src | default('') }}"
+    box_dest: "{{vcloud_work_path|default('/var/www/html')}}/{{ box_provider.dest | default('rhcsa/centos9') }}"
+    box_path: "{{ box_dest | dirname }}"
+  block:
+   - name: "Create Remote Folder |{{box_path| default('Empty') }}|"
+     file:
+       path: "{{ box_path | default('/tmp/vcloud') }}"
+       state: "directory"
+       recurse: "true"
+       owner: "{{ apache_user  | default('root') }}"
+       group: "{{ apache_group | default('root') }}"
+       mode: "0775"
+
+   - name: "Upload validated Boxes |{{box_src|default('Empty')}}| -> |{{box_dest|default('Empty')}}|"
+     copy:
+       src:  "{{ box_src  | default('')     }}"
+       dest: "{{ box_dest | default('/tmp/vcloud') }}"
+       owner: "{{ apache_user  | default('root') }}"
+       group: "{{ apache_group | default('root') }}"
+       mode: "0775"

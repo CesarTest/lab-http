@@ -1,0 +1,5 @@
+webservers:
+  hosts:
+    192.168.56.149
+  vars:
+    ansible_user: vagrant

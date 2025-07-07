@@ -1,0 +1,30 @@
+---
+###########################################
+#  TEMPLATES
+###########################################
+- name: "Dump Configuration File"
+  copy:
+    dest:    "{{ dump.dest | default(omit)}}"
+    content: "{{ dump.content |default(omit) }}"
+    mode:    "{{ dump.mode | default(omit)}}"
+    owner:   "{{ dump.owner | default(omit) }}"
+    group:   "{{ dump.group | default(omit) }}"
+  loop:
+    - dest:    "{{ package.template.dest | default(omit)}}"
+      content: "{{ package.template.content |default(omit) }}"
+      mode:    "{{ package.mode | default(omit)}}"
+      owner:   "{{ package.owner | default(omit) }}"
+      group:   "{{ package.group | default(omit) }}"
+  loop_control:
+    loop_var: "dump"
+  when:
+    - "package.template is defined"
+    - "package.template is not none"
+    - "package.template is not string"
+    - "package.template is mapping"
+    - "package.template.dest is defined"
+    - "package.template.dest is not none"
+    - "package.template.dest is string"
+    - "package.template.content is defined"
+    - "package.template.content is not none"
+    - "package.template.content is string" 

@@ -1,0 +1,14 @@
+---
+- name: "Upload Multisite Template |{{ grav_multisite | default('Vacio') }}|"
+  vars:
+    upload_path: "{{ grav_work_path | default('/var/www/html/training') }}"
+    upload_src:  "{{ grav_multisite | default('setup_subdirectory') }}.j2"
+    upload_dest: "{{ upload_path }}/setup.php"   
+  template:
+    src:   "{{ upload_src   | default('') }}"
+    dest:  "{{ upload_dest  | default('/tmp') }}"
+    owner: "{{ apache_user  | default('root')}}"
+    group: "{{ apache_group | default('root') }}"
+
+
+

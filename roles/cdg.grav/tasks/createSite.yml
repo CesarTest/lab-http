@@ -1,0 +1,83 @@
+---
+##################################
+#       CREATE FOLDERS
+##################################
+- name: "Create Site Folders"
+  file:
+    path: "{{ cp_path }}"
+    owner: "{{ apache_user  | default('apache') }}"
+    group: "{{ apache_group | default('apache') }}"
+    recurse: yes
+  loop: "{{ (site_paths | dict2items) | default([]) }}"
+  loop_control:
+    loop_var: "target_path"
+  vars:
+    cp_name: "{{ target_path.key  }}"
+    cp_path: "{{ target_path.value }}"
+  when:
+    - "isMultisite is true"
+    - "isRoot is false"
+
+- name: "Copy Site Folders"
+  copy:
+    src:  "{{ grav_work_path }}/user/{{ cp_name }}"
+    dest: "{{ cp_path }}"
+    owner: "{{ apache_user  | default('apache') }}"
+    group: "{{ apache_group | default('apache') }}"
+    remote_src: yes
+  loop: "{{ (site_paths | dict2items) | default([]) }}"
+  loop_control:
+    loop_var: "target_path"
+  vars:
+    cp_name: "{{ target_path.key  }}"
+    cp_path: "{{ target_path.value | dirname }}"
+  when:
+    - "isMultisite is true"
+    - "isRoot is false"
+
+##################################
+#         UPLOAD CONTENT
+##################################
+- name: "Site Configurations"
+  include_tasks: "uploadContent.yml"
+  loop: "{{ grav_site.contents | default([]) }}"
+  loop_control:
+    loop_var: "site_content"
+  vars:
+    site_upload_dest: "{{ site_work_path|default('') }}/{{ site_content.dest|default('') }}"
+  when:
+    - "(isMultisite is true) or (isRoot is true)"
+
+##################################
+##       CONFIGURATIONS 
+###################################
+- name: "Site Configurations"
+  lineinfile:
+    path:   "{{ site_work_path | default('') }}/{{ site_config.file   | default('') }}"
+    regexp: "{{ site_config.regexp | default('') }}"
+    line:   "{{ site_config.line   | default('') }}"
+  loop: "{{ grav_site.configs | default([]) }}"
+  loop_control:
+    loop_var: "site_config"
+  when:
+    - "(isMultisite is true) or (isRoot is true)"
+
+- name: "Dump Configuration Files"
+  include_tasks: "dumpConfig.yml"
+  loop: "{{ grav_site.dumps | default([]) }}"
+  loop_control:
+    loop_var: "pkg"
+  vars:
+    site_upload_dest: "{{ site_work_path|default('') }}/{{ site_content.dest|default('') }}" 
+    package:
+      mode:  "{{ pkg.mode | default(omit)}}"
+      owner: "{{ pkg.owner | default(omit)}}"
+      group: "{{ pkg.group | default(omit)}}"
+      template: 
+        dest: "{{ site_upload_dest}}/{{ pkg.template.dest | default('')}}"
+        content: "{{ pkg.template.content | default('') }}"
+  when:
+       - "(isMultisite is true) or (isRoot is true)" 
+
+
+

@@ -1,0 +1,11 @@
+---
+######################################################################
+#                 BOX PROVIDERS OF A VERSION UPLOAD
+#######################################################################
+- name: "Upload All Providers of a Version"
+  include_tasks: "3_uploadProvider.yml"
+  loop: "{{ box_providers }}"
+  loop_control:
+     loop_var: "box_provider"
+  vars:
+     box_providers: "{{ box_version.providers | default([]) }}" 
