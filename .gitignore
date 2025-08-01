@@ -1,0 +1,26 @@
+# NAME: git ignore settings
+# SOURCE: Source of truth on this configuration is located here:
+#   https://github.com/ansiblejunky/ansible-project-template/blob/master/.gitignore
+
+# Ansible
+*.retry
+*.log
+# add local roles but ignore everything else
+roles/*
+!roles/cdg.*
+!roles/requirements.yml
+collections/*
+!collections/requirements.yml
+.ansible
+facts.d/*
+roles/cdg.grav/files/*
+!roles/cdg.grav/files/sites
+!roles/cdg.grav/files/sites/*
+!roles/cdg.grav/files/download.sh
+
+# Python
+*.pyc
+.python-version
+.vscode
+.DS_Store
+.ruff_cache

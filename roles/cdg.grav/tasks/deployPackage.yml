@@ -111,7 +111,7 @@
        - "package.original is string"
        - "packager.original is not mapping"
        - "package.original|length > 0"
-  
+
   when:
     - "package.src is defined"
     - "package.src is not none"
@@ -124,3 +124,10 @@
 
    - name: "Dump Configuration File"
      include_tasks: "dumpConfig.yml"
+
+   - name: "Launch commands"
+     ignore_errors: yes
+     shell: "{{ cmd }}"
+     loop: "{{ package.command | default([]) }}"
+     loop_control:
+       loop_var: "cmd"

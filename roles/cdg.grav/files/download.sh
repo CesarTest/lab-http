@@ -7,12 +7,13 @@ WORK_PATH=( \
 	"./themes" \
 	"./themes" \
 	"./plugins" \
+	"./plugins" \
 	)
 URL=( \
     "https://getgrav.org/download/skeletons/learn2-with-git-sync-site/1.6.8" \
     "https://github.com/getgrav/grav-theme-learn4/archive/refs/heads/develop.zip" \
     "https://github.com/getgrav/grav-theme-quark/archive/refs/heads/develop.zip" \
-    "https://github.com/trilbymedia/grav-plugin-page-toc/archive/refs/heads/master.zip"
+    "https://github.com/trilbymedia/grav-plugin-page-toc/archive/refs/heads/master.zip" \
     )
 NAME=( \
      "learn2-skeleton.zip" \

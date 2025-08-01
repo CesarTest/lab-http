@@ -11,10 +11,6 @@
 #   Use the `scm` key for repos that do not exist in ansible-galaxy.com!
 #   Use the `include` directive to split a large file into multiple smaller files
 #   https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#installing-multiple-roles-from-multiple-files
-roles:
-  # Web Server
-  - name: geerlingguy.apache 
-  # PHP Server
-  - name: geerlingguy.php 
-  # Database Server
-  #- name: geerlingguy.postgresql
+collections:
+  - community.general
+  - ansible.posix
