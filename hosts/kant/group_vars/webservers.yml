@@ -129,16 +129,43 @@ grav_deploy:
             svg-icons: 7FDA84F1-067C4E27-9A22BD39-61793E6E
     command:
       - "sudo bash -c 'cd {{ grav_work_path | default('/tmp') }} ; bin/gpm install typhoon -y -n -v'"
+      - "sudo bash -c 'cd {{ grav_work_path | default('/tmp') }} ; bin/gpm install lightbox-gallery -y -n -v'"
+      - "sudo bash -c 'chown -R apache:apache {{ grav_work_path | default('/tmp') }}'"
 
+  - name: "Gantry Plugin"
+    src: "plugins/gantry5.zip"
+    dest: "{{ grav_work_path | default('/tmp') }}/user/plugins"
+        
+  - name: "Helium Theme"
+    src: "themes/helium.zip"
+    dest: "{{ grav_work_path | default('/tmp') }}/user/themes"
+    command:
+      - "sudo bash -c 'find {{ grav_work_path | default('/tmp') }}/user/themes/g5_helium -type d | xargs chmod 755'"
+      - "sudo bash -c 'find {{ grav_work_path | default('/tmp') }}/user/themes/g5_helium -type f | xargs chmod 644'"
+
+  - name: "Xenon Theme"
+    src: "sites/kant/themes/g5_helium.zip"
+    dest: "{{ grav_work_path | default('/tmp') }}/user/data/gantry5/themes"
+
+# 2.4.- Grav Sites
 grav_sites:
-  - title: "Kant"
+  - title: "Immanuel Kant"
     path: "home"
     root: yes
-    
+   
+    contents:
+      - src: "sites/kant/pages" 
+        dest: "/pages"
+        refresh: yes
+      - src: "sites/kant/images"
+        dest: "/themes/g5_helium/images"
+        refresh: yes
+
     configs:
       - file: "../.htaccess"
         regexp: "RewriteBase"
         line: "RewriteBase /"      
- 
-
+      - file: "config/system.yaml" 
+        regexp: 'theme:' 
+        line: '  theme: "g5_helium"'
 
