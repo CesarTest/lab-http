@@ -2,7 +2,7 @@
 #########################################################
 ##             GLOBAL PROPERTIES
 ##########################################################
-server_domain: "home.lab"
+server_domain: "maas.lab"
 apache_work_path: "/var/www/html"
 apache_logs: "/var/log/httpd"
 apache_refresh: yes
@@ -54,17 +54,17 @@ apache_options: "All Indexes FollowSymLinks"
 #    - mpm_itk_module
 apache_mods_disabled: []
 apache_vhosts:
-  - servername: "vcloud.{{server_domaini|default('econocom.lab')}}"
+  - servername: "vcloud.{{server_domain|default('maas.lab')}}"
     documentroot: "{{apache_work_path|default('/var/www/html')}}/vcloud"  
-    serveradmin: "cesar.delgado@econocom.com"
-    serveralias: "www.vcloud.{{server_domain|default('econocom.lab')}}" 
+    serveradmin: "cesar.electronic.engineer@gmail.com"
+    serveralias: "www.vcloud.{{server_domain|default('maas.lab')}}" 
     extra_parameters:  |
          ErrorLog  {{apache_logs|default('/var/log/httpd')}}/vcloud/error.log  
          CustomLog {{apache_logs|default('/var/log/httpd')}}/vcloud/access.log combined  
-  - servername: "training.{{server_domain|default('econocom.lab')}}"
+  - servername: "training.{{server_domain|default('maas.lab')}}"
     documentroot: "{{apache_work_path|default('/var/www/html')}}/training"
-    serveradmin: "cesar.delgado@econocom.com"
-    serveralias: "www.training.{{server_domain|default('econocom.lab')}}"
+    serveradmin: "cesar.electronic.engineer@gmail.com"
+    serveralias: "www.training.{{server_domain|default('maas.lab')}}"
     extra_parameters:  |
          ErrorLog  {{apache_logs|default('/var/log/httpd')}}/training/error.log
          CustomLog {{apache_logs|default('/var/log/httpd')}}/training/access.log combined     
@@ -136,7 +136,7 @@ php_opcache_max_file_size: "0"
 # 1.- Vagrant Virtual Boxes
 # -------------------------------------------------------
 vcloud_work_path: "{{apache_work_path|default('/var/www/html/training')}}/vcloud"
-vcloud_url: "http://vcloud.{{server_domain|default('econocom.lab')}}"
+vcloud_url: "http://vcloud.{{server_domain|default('maas.lab')}}"
 vcloud_boxes:
   - name: "lab/centos9"
     description: "CentOS Stream 9"
@@ -197,7 +197,7 @@ grav_users:
     fullname: "Cesar Delgado"
     adminuser: yes
     hashed_password: "$2y$10$B7eEPyeiWQe9X3nyEnSCU.F03mOhp7KDP2BvBtvNFH6SVBauT5C.C"
-    email: "cesar.delgado@econocom.com"
+    email: "cesar.electronic.engineer@gmail.com"
     title: "Administrador"
 
 # 2.3.- Grav Deploy
@@ -210,8 +210,8 @@ grav_deploy:
       dest: "/etc/hosts"
       content: |
         172.30.115.21 gitlab.proteo.internal
-        172.30.237.188 vcloud.econocom.lab
-        172.30.237.188 training.econocom.lab
+        172.30.237.188 vcloud.maas.lab
+        172.30.237.188 training.maas.lab
 
   - name: "Learn4 Theme"
     src: "themes/learn4-theme.zip"
@@ -219,7 +219,7 @@ grav_deploy:
     rename: "learn4"
     original: "grav-theme-learn4-develop"
     template:
-      dest: "{{ grav_work_path | default('/tmp') }}/user/config/themes/enaire.yaml"
+      dest: "{{ grav_work_path | default('/tmp') }}/user/config/themes/maas.yaml"
       content: |
          enabled: true
          top_level_version: false
@@ -336,11 +336,10 @@ grav_deploy:
 # 2.4.- Grav Sites
 grav_multisite: "setup_subdirectory"
 grav_multisite_path:
-  - "linux"
-  - "openshift"
+  - "maas"
   
 grav_sites:
-  - title: "Enaire Training Labs"
+  - title: "MaaS Training Labs"
     path: "home"
     root: yes
     
@@ -348,8 +347,8 @@ grav_sites:
       - src: "sites/home/themes/labs"
         dest: "themes/labs"
         refresh: yes 
-      - src: "sites/linux/themes/enaire"
-        dest: "themes/enaire"
+      - src: "sites/maas/themes/maas"
+        dest: "themes/maas"
         refresh: yes         
       - src: "sites/home/pages"
         dest: "pages"
@@ -364,38 +363,38 @@ grav_sites:
         line: '  theme: "labs"'
       - file: "config/site.yaml"
         regexp: 'title:'
-        line: 'title: "Enaire Training Labs"'
+        line: 'title: "MaaS Training Labs"'
       - file: "config/system.yaml"
         regexp: 'alias:'
         line: '  alias: /home'
       - file: "themes/labs/labs.yaml"
         regexp: 'home_url:'
-        line: "home_url:  http://training.{{server_domain|default('econocom.lab')}}"          
- 
-  - title: "RedHat Enterprise Linux Certifications"
-    path: "{{grav_multisite_path[0]|default('linux')}}"
+        line: "home_url:  http://training.{{server_domain|default('maas.lab')}}"          
+
+  - title: "Metal as a Service Lab"
+    path: "{{grav_multisite_path[0]|default('maas')}}"
     
     contents:
-      - src: "sites/{{grav_multisite_path[0]|default('linux')}}/pages" 
+      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/pages" 
         dest: "pages"
         refresh: yes
-      - src: "sites/{{grav_multisite_path[0]|default('linux')}}/images"
+      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/images"
         dest: "images"
         refresh: yes
         
     configs:
       - file: "config/system.yaml"
         regexp: 'theme:'
-        line: '  theme: "enaire"'
+        line: '  theme: "maas"'
       - file: "config/site.yaml"
         regexp: 'title:'
-        line: 'title: "RedHat Enterprise Linux"'
+        line: 'title: "Metal as a Service Lab"'
       - file: "config/system.yaml"
         regexp: 'alias:'
-        line: '  alias: /objetivos'
-      - file: "themes/learn4/learn4.php"
-        regexp: " ?: 'purple';"
-        line: "           $color = filter_input(INPUT_COOKIE, 'sidebar-pref') ?: 'green';"
+        line: '  alias: /intro'
+      #- file: "themes/learn4/learn4.php"
+      #  regexp: " ?: 'purple';"
+      #  line: "           $color = filter_input(INPUT_COOKIE, 'sidebar-pref') ?: 'green';"
       - file: "plugins/git-sync/blueprints.yaml"
         regexp: "placeholder: https://github.com/user/repository.git"
         line: "      placeholder: https://gitlab.proteo.internal/cdelgadog/{{grav_multisite_path[0]|default('linux')}}-doc.git"
@@ -407,6 +406,25 @@ grav_sites:
         line:   "        gitsync: cdelgadog"
 
     dumps:
+      - template:
+           dest: "config/themes/maas.yaml"      
+           content: |
+             enabled: true
+             production-mode: false
+             grid-size: grid-lg
+             github:
+              note: true
+              link: true
+              tree: https://github.com/getgrav/grav-learn/blob/develop/
+              commits: https://github.com/getgrav/grav-learn/commits/develop/
+             spectre:
+              exp: false               
+              icons: false
+             custom_logo:
+                 - name: 'logo.svg'
+             custom_logo_mobile:
+                 - name: 'logo.svg'
+                 
       - template: 
            dest: "plugins/git-sync/git-sync.yaml"
            content: |
@@ -441,137 +459,3 @@ grav_sites:
                 ignore: null
                 private_key: null
               logging: false
-
-  - title: "RedHat OpenShift Certifications"
-    path: "{{grav_multisite_path[1]|default('openshift')}}"
-    
-    contents:
-      - src: "sites/{{grav_multisite_path[1]|default('openshift')}}/pages" 
-        dest: "pages"
-        refresh: yes
-      - src: "sites/{{grav_multisite_path[1]|default('openshift')}}/images"
-        dest: "images"
-        refresh: yes
-        
-    configs:
-      - file: "config/system.yaml"
-        regexp: 'theme:'
-        line: '  theme: "enaire"'
-      - file: "config/site.yaml"
-        regexp: 'title:'
-        line: 'title: "RedHat OpenShift"'
-      - file: "config/system.yaml"
-        regexp: 'alias:'
-        line: '  alias: /objetivos'
-      - file: "plugins/git-sync/blueprints.yaml"
-        regexp: "placeholder: https://github.com/user/repository.git"
-        line: "      placeholder: https://gitlab.proteo.internal/cdelgadog/{{grav_multisite_path[1]|default('openshift')}}-doc.git"
-      - file: "plugins/git-sync/blueprints.yaml"
-        regexp: "gituser: Use Git User Name"
-        line:   "        gituser: cdelgadog"
-      - file: "plugins/git-sync/blueprints.yaml"
-        regexp: "gitsync: Use GitSync Committer Name"
-        line:   "        gitsync: cdelgadog"
-
-    dumps:
-      - template: 
-           dest: "plugins/git-sync/git-sync.yaml"
-           content: |
-              enabled: true
-              folders:
-               - pages
-              SyncNotice: null
-              sync:
-                on_save: true
-                on_delete: true
-                on_media: true
-                cron_enable: false
-                cron_at: '0 12,23 * * *'
-              local_repository: null
-              repository: 'git@gitlab.proteo.internal:cdelgadog/openshift-doc.git'
-              no_user: '1'
-              user: null
-              password: null
-              webhook: /_git-sync-6b113cfd91d1
-              webhook_enabled: '0'
-              webhook_secret: e5e95756fb10abb90faef3fc4a3f2e4eb87a5d951bf5f2b2
-              branch: master
-              remote:
-                name: origin
-                branch: master
-              git:
-                author: gituser
-                message: '(Grav GitSync) Automatic Commit'
-                name: GitSync
-                email: git-sync@trilby.media
-                bin: git
-                ignore: null
-                private_key: null
-              logging: false
-              
-  - title: "Enaire Linux Labs"
-    path: "{{grav_multisite_path[2]|default('enaire')}}"
-    
-    contents:
-      - src: "sites/{{grav_multisite_path[2]|default('enaire')}}/pages" 
-        dest: "pages"
-        refresh: yes
-      - src: "sites/{{grav_multisite_path[2]|default('enaire')}}/images"
-        dest: "images"
-        refresh: yes
-        
-    configs:
-      - file: "config/system.yaml"
-        regexp: 'theme:'
-        line: '  theme: "enaire"'
-      - file: "config/site.yaml"
-        regexp: 'title:'
-        line: 'title: "Enaire Linux Labs"'
-      - file: "config/system.yaml"
-        regexp: 'alias:'
-        line: '  alias: /objetivos'
-      - file: "plugins/git-sync/blueprints.yaml"
-        regexp: "placeholder: https://github.com/user/repository.git"
-        line: "      placeholder: https://gitlab.proteo.internal/cdelgadog/{{grav_multisite_path[2]|default('enaire')}}-doc.git"
-      - file: "plugins/git-sync/blueprints.yaml"
-        regexp: "gituser: Use Git User Name"
-        line:   "        gituser: cdelgadog"
-      - file: "plugins/git-sync/blueprints.yaml"
-        regexp: "gitsync: Use GitSync Committer Name"
-        line:   "        gitsync: cdelgadog"
-
-    dumps:
-      - template: 
-           dest: "plugins/git-sync/git-sync.yaml"
-           content: |
-              enabled: true
-              folders:
-               - pages
-              SyncNotice: null
-              sync:
-                on_save: true
-                on_delete: true
-                on_media: true
-                cron_enable: false
-                cron_at: '0 12,23 * * *'
-              local_repository: null
-              repository: 'git@gitlab.proteo.internal:cdelgadog/enaire-doc.git'
-              no_user: '1'
-              user: null
-              password: null
-              webhook: /_git-sync-6b113cfd91d1
-              webhook_enabled: '0'
-              webhook_secret: e5e95756fb10abb90faef3fc4a3f2e4eb87a5d951bf5f2b2
-              branch: master
-              remote:
-                name: origin
-                branch: master
-              git:
-                author: gituser
-                message: '(Grav GitSync) Automatic Commit'
-                name: GitSync
-                email: git-sync@trilby.media
-                bin: git
-                ignore: null
-                private_key: null
-              logging: false                            
