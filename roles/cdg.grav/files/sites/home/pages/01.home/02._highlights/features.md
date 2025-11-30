@@ -3,10 +3,18 @@ title: Maquetas
 menu: Maquetas
 class: offset-box
 features:
-	- header: "Undercloud"
-	  text: "Automatización Undercloud"
+	- header: "ENAIRE"
+	  text: "Linux Labs para Muebles iFocus"
 	  icon: fa fa-puzzle-piece
-	  url: "maas"         
+	  url: "enaire"
+	- header: "Linux"
+	  text: "Arquitectura, Automatización y Diagnósticos"
+	  icon: fa fa-fighter-jet
+	  url: "linux"
+    - header: "OpenShift"
+      text: "Arquitectura, Automatización y Diagnósticos"
+      icon: fa fa-database
+	  url: "openshift"         
 ---
 
 # Automatización de Fábricas DevSecOps

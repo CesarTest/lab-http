@@ -16,5 +16,5 @@
   roles:
     - "geerlingguy.apache"
     - "geerlingguy.php"  
-      #- "cdg.vcloud"
+    - "cdg.vcloud"
     - "cdg.grav"
