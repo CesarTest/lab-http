@@ -39,24 +39,24 @@
 
 ## PART 2: DESPLEGAR LA WEB... desde WSL
 
-+ 1. **Clonar Repositorio GIT** en WSL
++ 1. **Instalar ansible y dependencias en WSL**
+<div class="prism-wrapper"><pre class="language-bash"><code>
+ sudo apt update && sudo apt upgrade -y
+ sudo apt install python3-pip git libffi-dev libssl-dev -y
+ pip3 install --user ansible pywinrm  # pywinrm is a Python client for the Windows Remote Management (WinRM) service 
+</code> </pre></div>
+
++ 2. **Clonar Repositorio GIT** en WSL
 <div class="prism-wrapper"><pre class="language-bash"><code>
      sudo -i
      git clone git@github.com:CesarTest/lab-http.git
 </code> </pre></div>
  
-+ 2. **Agregar URLs** a WSL
++ 3. **Agregar URLs** a WSL
 <div class="prism-wrapper"><pre class="language-bash"><code>
      echo '
       192.168.56.149 vcloud.maas.lab
       192.168.56.149 training.maas.lab' >> /etc/hosts
-</code> </pre></div>
-
-+ 3. **Instalar ansible y dependencias en WSL**
-<div class="prism-wrapper"><pre class="language-bash"><code>
- sudo apt update && sudo apt upgrade -y
- sudo apt install python3-pip git libffi-dev libssl-dev -y
- pip3 install --user ansible pywinrm  # pywinrm is a Python client for the Windows Remote Management (WinRM) service 
 </code> </pre></div>
 
 + 4. **Relaciones de confianza SSH**
@@ -75,4 +75,5 @@
 </code> </pre></div>
  
 	
+
 
