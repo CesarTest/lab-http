@@ -21,36 +21,16 @@ process:
 - [MobaXterm](https://mobaxterm.mobatek.net/download.html)
 - [Paquetes MobaXterm: Git y Ansible](https://mobaxterm.mobatek.net/plugins.html) 
 
-
-###  C) Repositorio GIT privado de Indra.
-- Acceso desde Intranet, o VPN SACTA desde casa.
-- Permisos de acceso al Repositorio GIT
-
+###  C) Repositorio GIT en GitHub.
 
 1.- **Agregar GIT a /etc/host**
 <div class="prism-wrapper"><pre class="language-bash"><code>
      echo '
-      172.30.115.21 gitlab.proteo.internal
-      172.30.237.188 vcloud.econocom.lab
-      172.30.237.188 training.econocom.lab' >> /etc/hosts
+      192.168.56.149 vcloud.maas.lab
+      192.168.56.149 training.maas.lab' >> /etc/hosts
 </code> </pre></div>
 
-2.- **Modificar Saltos SSH al GIT**
-<div class="prism-wrapper"><pre class="language-bash"><code>
-     echo '
-     Host *
-       KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
-       HostKeyAlgorithms +ssh-rsa,ssh-dss
-     Host 172.30.115.21
-       ProxyCommand ssh root@172.30.246.230 nc %h %p
-       User cdelgadog
-     Host gitlab.proteo.internal
-       ProxyCommand ssh root@172.30.246.230 nc %h %p
-       User cdelgadog' > $HOME/.ssh/config
-     chmod 600 $HOME/.ssh/config
-</code> </pre></div>
-
-3.- **Agregar Clave Privada de Acceso a GIt**
+2.- **Agregar Clave Privada de Acceso a GIt**
 <div class="prism-wrapper"><pre class="language-bash"><code>
      echo '-----BEGIN OPENSSH PRIVATE KEY-----
      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
@@ -94,7 +74,7 @@ process:
      sudo -i
 </code> </pre></div>
 
-4.- **Agregar Clave Pública de Acceso a GIT**
+3.- **Agregar Clave Pública de Acceso a GIT**
 <div class="prism-wrapper"><pre class="language-bash"><code>
      echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDR7TUX27vpClGSEQDVTMH5o0OdbYnQF84EguiHiP02Dv6TKBQeTVXvF6yNOTzsoKgLRWrort6hS4eOw2m8OBxUemHH21+p/FcVeA/o5YJvgzgZb/HQfaX2ZZM2teQCiO2vIteeuj+VVwytd+NW+DArFQs6DjtuVW37cd4G+6HY6YxI4aYPlP4M658N/0jasx+qHBcWZoU82+pw0sWN1eh3c9iOZweSOHwOFyVU6z3ID2uumethGgj0yHsvXZtqhGCCJXXxZO7gp6a8Vf0OgRpbDbx6w+OATU4I1Y8r34zni3sq8ESY4+r62LQYqxDOikvfJ89UzFJnUGuJx8MkjBKNqngQ6Jy8hDOPtw00kOzCJasT2Qm+oJshyWeb0wgMCg84GqtCNF3ONrQpYskGviLAvl0TFfQsFX1XPhmqyBb8+r720ZR8yqC5IVAUjUVt1qoRTZE3ZHOACXFx2vcNhxJOPd2/MXz9F11taC8JdfplZhOPGunqF5pfAs8EhSZZZvU= CDELGADO@LAESPF3N9K5L' > $HOME/.ssh/id_rsa.pub
      chmod 600 $HOME/.ssh/id_rsa.pub
@@ -111,14 +91,12 @@ process:
 
 + 3. **Clonar el repositorio Git**, se supone que el PC tiene ya el acceso GIT configurado (en el PASO 2 se describen los pasos).
 <div class="prism-wrapper"><pre class="language-bash"><code>
-     git clone git@gitlab.proteo.internal:cdelgadog/rhcsa-lab.git
-
+     git clone git@github.com:CesarTest/lab.git
 </code> </pre></div>
 
 + 4. **Levantar la maqueta**
 <div class="prism-wrapper"><pre class="language-bash"><code>
-     cd rhcsa-lab/vagrant-lab 
+     cd lab/vagrant-lab 
      vagrant up
 </code> </pre></div>
- 
  
