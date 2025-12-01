@@ -21,7 +21,7 @@ En la imagen las dos partes del sistema operativo, el entorno de ejecución repr
        1. <u>kernel:</u> para asignación automática de recursos hardware a cada programa 
        2. <u>demonio de sistema:</u> que organiza el ecosistema de programas a través de unidades de ejecución (ficheros donde se describe cómo controlar el ciclo de vida de cada programa, en Linux hay dos variantes el antiguo Init y el nuevo SystemD).
        3. <u>UDEV:</u> administrador de dispositivos que automáticamente crea todo lo necesario para qye un dispositivo hardware pueda ser gestionado por el kernel, dejando el modelo de datos en la carpeta <code>/sys</code>.
-   - <b>Trazabilidad:</b> *auditoría* del kernel y *logs* o registros de actividad de los programas que administra el demonio de sistema.
+   - <b>Trazabilidad:</b> *auditoría* de llamadas al sistema del kernel y *logs* o registros de actividad de los programas que administra el demonio de sistema.
    - <b>Software:</b> *repositorios*, las aplicaciones en linux se distribuyen en forma de paquetes a través de respositorios.Una serie de ficheros mantiene la base de datos de URLs donde conectarse para bajar esos paquetes.
    - <b>Seguridad:</b> las aplicaciones cuando van a acceder a los ficheros (los recursos de los sistemas informáticos) pasan por un Mandatory Access Control (MAC) que consta de tres elementos principales: 
         1. <u>Usuarios:</u> RBAC (Role Based Access Control) en Linux hay tres posibilidades:
