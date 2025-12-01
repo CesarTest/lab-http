@@ -1,4 +1,4 @@
- # Ejercicios Automatización UnderCloud
+# Ejercicios Automatización UnderCloud
 
 ## PART 1: LEVANTAR MAQUETA VAGRANT... desde MobaXterm	
 
@@ -68,12 +68,26 @@
   ansible -m ping all
 </code> </pre></div>
  
-+ 5. **Instalar Web** 
++ 5. **Gestion de Dependencias**
+<div class="prism-wrapper"><pre class="language-bash"><code>
+  cd lab-http/roles
+  ansible-galaxy role install --upgrade -r requirements.yml
+</code> </pre></div>
+
++ 6. **Descarga Paquetes**
+<div class="prism-wrapper"><pre class="language-bash"><code>
+  cd lab-http/roles/cdg.grav/files
+  chmod +x download.sh
+  ./download.sh
+</code> </pre></div>
+
++ 7. **Instalar Web** 
 <div class="prism-wrapper"><pre class="language-bash"><code>
   cd lab-http
   ansible-playbook playbooks/services.yaml
 </code> </pre></div>
  
 	
+
 
 
