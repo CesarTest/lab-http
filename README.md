@@ -86,8 +86,15 @@
   cd lab-http
   ansible-playbook playbooks/services.yaml
 </code> </pre></div>
- 
-	
+
++ 8. **Acceso a la Web**
+8.1. Editar C:\Windows\System32\drivers\etc\hosts, agregar líneas
+<div class="prism-wrapper"><pre class="language-bash"><code>
+192.168.56.149 training.maas.lab
+192.168.56.149 vcloud.maas.lab
+</code> </pre></div>
+
+8.2.- Navegador Web http://training.maas.lab
 
 
 
