@@ -15,6 +15,7 @@ facts.d
 *.zip
 # filsystem extra files
 *.jpg_Zone.Identifier
+*.png_Zone.Identifier
 # Hidden folders
 .*
 # add local roles but ignore everything else

@@ -42,8 +42,7 @@
 + 1. **Instalar ansible y dependencias en WSL**
 <div class="prism-wrapper"><pre class="language-bash"><code>
  sudo apt update && sudo apt upgrade -y
- sudo apt install python3-pip git libffi-dev libssl-dev -y
- pip3 install --user ansible pywinrm  # pywinrm is a Python client for the Windows Remote Management (WinRM) service 
+ sudo apt install python3-pip git libffi-dev libssl-dev ansible -y
 </code> </pre></div>
 
 + 2. **Clonar Repositorio GIT** en WSL
@@ -88,13 +87,13 @@
 </code> </pre></div>
 
 + 8. **Acceso a la Web**
-8.1. Editar C:\Windows\System32\drivers\etc\hosts, agregar líneas
+- 8.1. Editar C:\Windows\System32\drivers\etc\hosts, agregar líneas
 <div class="prism-wrapper"><pre class="language-bash"><code>
 192.168.56.149 training.maas.lab
 192.168.56.149 vcloud.maas.lab
 </code> </pre></div>
 
-8.2.- Navegador Web http://training.maas.lab
+- 8.2.- Navegador Web http://training.maas.lab
 
 
 
