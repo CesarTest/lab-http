@@ -4,6 +4,14 @@
 ######################################################
   - name: "PREPARE SERVER - STAGE 1: Selinux"
     block:
+      - name: "SELinux Python Dependencies"
+        ignore_errors: yes
+        become: yes
+        package:
+          name:
+            - policycoreutils-python3 
+          state: present 
+        
       - name: "SELinux Mode" 
         become: yes
         selinux:
