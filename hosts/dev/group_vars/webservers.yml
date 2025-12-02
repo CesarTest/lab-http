@@ -283,55 +283,6 @@ grav_deploy:
           slug_maxlen: 25           # Max length of slugs used for anchors
           slug_prefix:              # A prefix used in front of generated slugs              
 
-  - name: "SSH Keys - Root User"
-    src: "install/.ssh/"
-    dest: "/root/.ssh/"
-    owner: "root"
-    group: "root"
-    refresh: yes
-    folder_mode: "0700"
-    mode: "0600"
-    isTarball: no
-    template:
-      dest: "/root/.ssh/config"
-      mode: "0600"
-      owner: "root"
-      content: |
-        Host *
-          KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
-          HostKeyAlgorithms +ssh-rsa,ssh-dss
-
-        Host 172.30.115.21
-          ProxyCommand ssh root@172.30.246.230 nc %h %p
-          User cdelgadog
-
-        Host gitlab.proteo.internal
-          ProxyCommand ssh root@172.30.246.230 nc %h %p
-          User cdelgadog
-
-  - name: "SSH Keys - Apache User"
-    src: "install/.ssh/"
-    dest: "/usr/share/httpd/.ssh/"
-    owner: "{{apache_user|default('apache')}}"
-    group: "{{apache_user|default('apache')}}"
-    mode: "0600"
-    folder_mode: "0700"
-    refresh: yes
-    isTarball: no
-    template:
-      dest: "/usr/share/httpd/.ssh/config"
-      content: |
-        Host *
-          KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
-          HostKeyAlgorithms +ssh-rsa,ssh-dss
-        
-        Host 172.30.115.21
-          ProxyCommand ssh root@172.30.246.230 nc %h %p
-          User cdelgadog
-
-        Host gitlab.proteo.internal
-          ProxyCommand ssh root@172.30.246.230 nc %h %p
-          User cdelgadog
 
 # 2.4.- Grav Sites
 grav_multisite: "setup_subdirectory"

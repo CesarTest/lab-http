@@ -1,0 +1,34 @@
+# gitignore settings
+# Source of truth on this configuration is located here:
+# https://github.com/ansiblejunky/ansible-project-template/blob/master/.gitignore
+
+# Ansible
+# facts generated locally based on ansible.cfg settings
+facts.d
+# retry files
+*.retry
+# logs
+*.log
+# boxes
+*.box
+# zip
+*.zip
+# filsystem extra files
+*.jpg_Zone.Identifier
+# Hidden folders
+.*
+# add local roles but ignore everything else
+roles/*
+!roles/cdg.*
+!roles/requirements.yml
+collections/ansible_collections
+#roles/cdg.vcloud/files
+!roles/cdg.vcloud/files/download.sh
+
+# Python
+# compiled files
+*.pyc
+# pyenv configuration
+.python-version
+.vscode
+.DS_Store

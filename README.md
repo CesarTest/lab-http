@@ -70,8 +70,8 @@
  
 + 5. **Gestion de Dependencias**
 <div class="prism-wrapper"><pre class="language-bash"><code>
-  cd lab-http/roles
-  ansible-galaxy role install --upgrade -r requirements.yml
+  cd lab-http
+  ansible-galaxy role install -r roles/requirements.yml
 </code> </pre></div>
 
 + 6. **Descarga Paquetes**
