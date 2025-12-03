@@ -24,7 +24,7 @@
 
 + 1. **Abrir Termina MobaXterm local** 
 
-+ 2. **Limpiar Entorno Trabajo Virtual box**, en <code>C:\Users\<Usuario>\VirtualBox VMs</code> borrar subdirectorio <code>RHCSA9</code> si existiese.
++ 2. **Limpiar Entorno Trabajo Virtual box**, en <code>C:\Users\<Usuario>\VirtualBox VMs</code> borrar subdirectorio <code>GitOps_Lab</code> si existiese.
 
 + 3. **Clonar el repositorio Git**, se supone que el PC tiene ya el acceso GIT configurado (en el PASO 2 se describen los pasos).
 <div class="prism-wrapper"><pre class="language-bash"><code>

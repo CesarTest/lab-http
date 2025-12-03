@@ -31,3 +31,9 @@ Put your custom CSS in this file.
     text-transform: unset !important;
 }
 
+#logo .st0{fill:#FFFFFF;}
+#logo .st1{fill:#010101!important;}
+#logo .st2{fill:#F99B1C!important;}
+#logo .st3{fill:#A04B23!important;}
+#logo .st4{opacity:0.2;fill:#4D4D4D!important;enable-background:new    ;}
+
