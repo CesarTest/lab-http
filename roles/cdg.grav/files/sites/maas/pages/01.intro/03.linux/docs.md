@@ -9,7 +9,11 @@ Se pretende dar una visión resumida y completa del sistema operativo Linux, la 
 
 # Arquitectura
 ## Componentes
-El sistema operativo puede ser visto como un gestor de programas, multitud de programas (procesos o demonios) agrupados en subsistemas que crean un entorno de ejecución. Cada subsistema ofrece una serie de funcionalidades finales dentro de ese entorno. 
++ **DEF.: Sistema Operativo:** programa que gestiona todos los recursos de una máquina von Neuman para ejecutar programas en ella. El núcleo de sistema (o kernel) ofrece una interfaz estándar de llamadas al sistema a los programas, interfaz que les permite usar todos los recursos hardware de la máquina sin conocer sus detalles específicos (un ratón, un teclado, una pantalla, una impresora, etc.). El troubleshooting consiste en aprender a analkzar una máquina von Neumann.
++ **DEF.: Driver:** módulo del kernel que implementa la interfaz estándar de llamadas al sistema para un determino dispositivo hardware. Cada sistema operativo tiene su propio juego de llamadas al sistema, aunque están tipificadas en la norma [POSIX (Portable Operating System Interface)](https://es.wikipedia.org/wiki/POSIX?target=_blank). 
++ **DEF.: DMA, Direct Memory Access:** procesador del puente sur de la placa madre transfieren los datos de los dispositivos I/O a posiciones fijas de memoria RAM; los programas acceden así a los datos provenientes de discos, ratones, pantallas, etc. Las [IOMMU (Input/Output Memory Management Unit)](https://es.wikipedia.org/wiki/Unidad_de_gesti%C3%B3n_de_memoria_de_entrada/salida?target=_blank) mejorán ese mecanismo DMA para la virtualziación. 
++ **DEF.: Entorno de Ejecución:** colección de recursos que permiten gestionar un ecosistema de programas. 
++ **DEF.: Subsistema:** colección de programas que cooperan para ofrecer una funcionalidad final sistema (configuración de la red, entorno gráfico, etc.). 
 
 En la imagen las dos partes del sistema operativo, el entorno de ejecución representado por un nido, y los subsistemas representados por los huevos dentro del nido:
 ![Arquitectura Linux](image://intro/linux.jpg)
