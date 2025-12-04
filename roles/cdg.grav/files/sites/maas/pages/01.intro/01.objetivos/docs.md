@@ -35,5 +35,13 @@ taxonomy:
 + **PASO 3: Metal3:** despliegue de clústers con Metal3.
 + **PASO 4: Estrategias de Despliegue:** cómo gestionar un repositorio de configuraciones para integrarlas de manera orgánica, incluyendo los vitales mecanismos de herencia. Se toma como referencia el proyecto [OSM](https://osm.etsi.org/?target=_blank) de [ETSI](https://www.etsi.org/?target=_blank).
 
+## C.- Referencias: Guías para la Implementación
+
+Una vez involucrados los conceptos básicos, la toma de contacto con proyectos de altos estándares de automatización:
++ **[OPVNF](https://anuket.io/news/?target=_blank):** comunidad abierta con altos estándares de automatización para poder desplegar entornos de pruebas con cualquier combinación de tecnologías que use cada operadora de red. Directora del proyecto es 
+[Heather Kirksey](https://www.silverliningsevents.com/person/heather-kirksey?target=_blank)
++ **[Airship](https://www.airshipit.org/?target=_blank):** proyecto de AT&T para gestionar una red de centros de datos a partir de un repositorio de estrategias de depliegue en la cabecera de región. Aunque el desarrollo haya sido interrumpido, la gestión de documentos YAML con sistemas de herencias tiene conceptos muy relevantes para la integración de configuraciones en estrategias de despliegue de infraestructura. Arquitecto del proyecto es [Rodolfo Pacheco](https://wiki.openstack.org/wiki/Airship?target=_blank).
+  
+
 # Introducción a Ironic y Metal3
 <div class="grav-youtube"><iframe src="https://www.youtube.com/embed/2It3XtWnLlI" frameborder="0" allowfullscreen=""></iframe></div>

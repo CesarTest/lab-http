@@ -22,8 +22,8 @@ En la imagen las dos partes del sistema operativo, el entorno de ejecución repr
 ## Entorno de Ejecución 
 **DEF.: El Entorno de Ejecución:** infraestructura de recursos y herramientas comunes para administrar el ecosistema de programas.
    - <b>Estructura:</b> 
-       1. <u>kernel:</u> para asignación automática de recursos hardware a cada programa 
-       2. <u>demonio de sistema:</u> que organiza el ecosistema de programas a través de unidades de ejecución (ficheros donde se describe cómo controlar el ciclo de vida de cada programa, en Linux hay dos variantes el antiguo Init y el nuevo SystemD).
+       1. <u>Kernel:</u> para asignación automática de recursos hardware a cada programa 
+       2. <u>Demonio de Sistema:</u> organiza el ecosistema de programas a través de unidades de ejecución (ficheros donde se describe cómo controlar el ciclo de vida de cada programa, en Linux hay dos variantes el antiguo Init y el nuevo SystemD). Estas unidades de ejecución se organizan en niveles de ejecución que definen su orden de lanzamiento durante el proceso de arranque de la máquina.
        3. <u>UDEV:</u> administrador de dispositivos que automáticamente crea todo lo necesario para qye un dispositivo hardware pueda ser gestionado por el kernel, dejando el modelo de datos en la carpeta <code>/sys</code>.
    - <b>Trazabilidad:</b> *auditoría* de llamadas al sistema del kernel y *logs* o registros de actividad de los programas que administra el demonio de sistema.
    - <b>Software:</b> *repositorios*, las aplicaciones en linux se distribuyen en forma de paquetes a través de respositorios.Una serie de ficheros mantiene la base de datos de URLs donde conectarse para bajar esos paquetes.
