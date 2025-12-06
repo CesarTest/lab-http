@@ -38,10 +38,12 @@ taxonomy:
 ## C.- Referencias: Guías para la Implementación
 
 Una vez involucrados los conceptos básicos, la toma de contacto con proyectos de altos estándares de automatización:
-+ **[OPVNF](https://anuket.io/news/?target=_blank):** comunidad abierta con altos estándares de automatización para poder desplegar entornos de pruebas con cualquier combinación de tecnologías que use cada operadora de red. Directora del proyecto es 
++ **[OSM](https://osm.etsi.org/?target=_blank):** donde están desarrollando estándares para la comunidad Telco de creación y gestión de estrategias de despliegue. Director del proyecto [Francisico Javier Ramón Salguero](https://portal.etsi.org/tb.aspx?tbid=845&SubTB=845#/?target=_blank).
++ **[Anuket Pharos Lab](https://anuket.io/news/?target=_blank):** comunidad abierta con altos estándares de automatización para poder desplegar entornos de pruebas con cualquier combinación de tecnologías que use cada operadora de red. Directora del proyecto es 
 [Heather Kirksey](https://www.silverliningsevents.com/person/heather-kirksey?target=_blank)
 + **[Airship](https://www.airshipit.org/?target=_blank):** proyecto de AT&T para gestionar una red de centros de datos a partir de un repositorio de estrategias de depliegue en la cabecera de región. Aunque el desarrollo haya sido interrumpido, la gestión de documentos YAML con sistemas de herencias tiene conceptos muy relevantes para la integración de configuraciones en estrategias de despliegue de infraestructura. Arquitecto del proyecto es [Rodolfo Pacheco](https://wiki.openstack.org/wiki/Airship?target=_blank).
   
 
 # Introducción a Ironic y Metal3
 <div class="grav-youtube"><iframe src="https://www.youtube.com/embed/2It3XtWnLlI" frameborder="0" allowfullscreen=""></iframe></div>
+
