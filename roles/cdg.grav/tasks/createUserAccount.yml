@@ -1,0 +1,7 @@
+---
+- name: "Create GRAV User Account at |{{ upload_dest | default('Empty') }}|"
+  template:
+    src: "user.j2"
+    dest:  "{{ upload_dest  | default('')     }}"
+    owner: "{{ apache_user  | default('root') }}"
+    group: "{{ apache_group | default('root') }}"

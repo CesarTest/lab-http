@@ -1,0 +1,39 @@
+/*
+===============================================================================================================================
+Put your custom CSS in this file.
+===============================================================================================================================
+*/
+
+/* CSS to hide sidebar numbering (uncomment to enable) */
+/*
+#sidebar ul.topics > li > a b
+{
+    visibility: hidden;
+}
+*/
+
+/* CSS to hide clipboard icon (uncomment to enable) */
+/*
+.copy-to-clipboard {
+    display:none;
+}
+*/
+
+/* Load of Font Awesome for use by Presentation Plugin */
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css');
+
+/* CSS to style Presentation Plugin slides */
+.reveal .slides {
+    text-align: left;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+    text-transform: unset !important;
+}
+
+#logo .st0{fill:#FFFFFF;}
+#logo .st1{fill:#010101!important;}
+#logo .st2{fill:#F99B1C!important;}
+#logo .st3{fill:#A04B23!important;}
+#logo .st4{opacity:0.2;fill:#4D4D4D!important;enable-background:new    ;}
+

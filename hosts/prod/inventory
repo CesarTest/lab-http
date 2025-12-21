@@ -1,0 +1,5 @@
+webservers:
+  hosts:
+    172.30.237.188
+  vars:
+    ansible_user: ansible 

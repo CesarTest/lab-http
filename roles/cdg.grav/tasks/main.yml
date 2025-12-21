@@ -1,0 +1,69 @@
+---
+- name: "PREPARE GRAV INSTALLATION"
+  vars:
+    multisite_defined: "{{ (grav_multisite is defined) and ( grav_multisite is not none )   }}"
+    multisite_none:    "{{ (multisite_defined is true) and (grav_multisite is string)       }}"
+    multisite_type:    "{{ (multisite_none is true)    and (grav_mulstisite is not mapping) }}"
+    isMultisite:       "{{ (multisite_type is true)    and (grav_multisite|length > 0)      }}" 
+
+  block:
+
+
+    ######################################
+    #           INSTALLATION
+    ######################################
+    - name: "Install GRAV Package"
+      include_tasks: "deployPackage.yml"
+      loop: "{{ grav_deploy | default([]) }}"
+      loop_control:
+         loop_var: "grav_package"
+      vars:
+         package:  "{{ grav_package }}"
+
+    #######################################
+    #         GRAV USERS ACCOUNT
+    #######################################
+    - name: "Install  Grav Users Account"
+      include_tasks: "createUserAccount.yml"
+      loop: "{{ grav_users | default([]) }}"
+      loop_control:
+          loop_var: "grav_user"
+      vars:
+        upload_dest: "{{ grav_users_path | default('/tmp') }}/{{ grav_user.username }}.yaml"
+
+    #######################################
+    #            CREATE SITES 
+    #######################################
+    - name: "Enable Multisite"
+      include_tasks: "enableMultisite.yml"
+      when: "isMultisite is true"
+
+    - name: "Create Sites"
+      vars:
+         root_defined: "{{ (grav_site.root is defined) and ( grav_site.root is not none )   }}"
+         isRoot:       "{{ (root_defined is true) and (grav_site.root is true) }}"
+         capture_work_path: |
+           {%- if (isRoot|bool is true) -%}{{grav_work_path }}/user
+           {%- else -%}{{ grav_work_path }}/user/env/{{ grav_site.path }}
+           {%- endif -%}
+         site_work_path:    "{{ capture_work_path | trim | replace('\n', '') }}"
+         site_paths:
+            accounts: "{{ site_work_path}}/themes"
+            themes:  "{{ site_work_path}}/themes"
+            pages:   "{{ site_work_path }}/pages"
+            plugins: "{{ site_work_path }}/plugins"
+            config: "{{ site_work_path }}/config"    
+
+      include_tasks: "createSite.yml"
+      loop: "{{ grav_sites | default([]) }}"
+      loop_control:
+          loop_var: "grav_site"
+      when: "(isMultisite is true) or (isRoot is true)"
+
+  rescue:
+
+    - name: "ERROR - PREPARING GRAV INSTALLATION"
+      debug:
+        msg:
+          - "Missing Definitions: |grav_deploy|"
+          - "{{ grav_deploy | default('Empty Value')}}"

@@ -1,0 +1,126 @@
+---
+##################################
+#             FOLDERS
+##################################
+- block:
+   - name: "Delete Old Contents"
+     file:
+       path: "{{ package.dest | default('') }}"
+       state: "absent"
+     when:
+       - "package.refresh is defined"
+       - "package.refresh is not none"
+       - "package.refresh|bool is true"
+
+   - name: "Create Package Folder |{{ package.dest | default('Empty')}}|"
+     vars:
+       pkg_folders:
+         - path: "{{ package.dest | default('/tmp/grav') }}"
+           owner: "{{ package.owner | default(apache_user) | default('apache')}}"
+           group:  "{{ package.group | default(apache_group) | default('apache') }}"
+           mode: "{{ package.folder_mode | default(omit) }}"
+         - path: "{{ package.tmp | default('/tmp/grav') }}"
+           owner: "{{ apache_user | default('apache')}}"
+           group:  "{{ apache_group | default('apache') }}"
+
+     file:
+       path: "{{ pkg_dir.path | default(omit)}}"
+       state: "directory"
+       owner: "{{ pkg_dir.owner | default(omit)}}"
+       group: "{{ pkg_dir.group | default(omit) }}"
+       mode: "{{ pkg_dir.mode | default(omit) }}"
+     loop: "{{ pkg_folders | default([]) }}"
+     loop_control:
+       loop_var: "pkg_dir"
+     when:
+       - "pkg_dir.path is defined"
+       - "pkg_dir.path is not none"
+       - "pkg_dir.path is string"
+  when:
+   - "package.dest is defined"
+   - "package.dest is not none"
+   - "package.dest is string"
+
+######################################
+# PACKAGE 
+######################################
+- block:
+   - name: "Upload Package : |{{ package.src | default('Empty') }}| -> |{{ package.tmp | default('Empty') }}|"
+     copy:
+       dest: "{{ package.tmp | default('/tmp/grav') }}"
+       src:  "{{ package.src | default('') }}"
+       owner: "{{ apache_user | default('root')}}"
+       group: "{{ apache_group | default('root') }}"
+
+
+   - name: "Unarchive Package on Remote Machine"
+     unarchive:
+       src:   "{{ tarball.src   }}"
+       dest:  "{{ tarball.dest  }}"
+       owner: "{{ tarball.owner }}"
+       group: "{{ tarball.group }}"  
+       remote_src: yes
+     loop:
+       - src:   "{{ package.tmp | default('/tmp/grav') }}/{{ (package.src | default('')) | basename }}"
+         dest:  "{{ package.dest | default('/tmp/grav') }}"
+         owner: "{{ apache_user | default('apache')}}"
+         group: "{{ apache_group | default('root') }}"
+     loop_control:
+       loop_var: "tarball"    
+     when:
+       - "package.isTarball is not defined"
+
+   - name: "Copy File" 
+     copy:
+       dest:  "{{ pkg.dest  }}"
+       src:   "{{ pkg.src   }}"
+       owner: "{{ pkg.owner }}"
+       group: "{{ pkg.group }}"
+       mode:  "{{ pkg.mode  }}"
+     loop: 
+       - src: "{{ package.src | default('/tmp/grav') }}"
+         dest: "{{ package.dest | default('/tmp/grav') }}"
+         owner: "{{ package.owner | default('root')}}"
+         group:  "{{ package.group | default('root') }}"
+         mode: "{{ package.mode | default(omit)}}"
+     loop_control:
+         loop_var: "pkg"
+     when: 
+         - "package.isTarball is defined" 
+
+   - name: "Rename Package Folder"
+     ignore_errors: yes
+     vars: 
+       cmd_path: "{{ package.dest | default('/tmp/grav') }}"
+       cmd_orig: "{{ cmd_path }}/{{ package.original | default('test')}}"
+       cmd_dest: "{{ cmd_path }}/{{ package.rename | default('test') }}"
+     command: "{{ command }}"
+     loop: 
+       - "mv --force {{ cmd_orig }} {{ cmd_dest }}"
+       - "rm -rf {{ cmd_orig }}"
+     loop_control:
+       loop_var: "command"
+     when:
+       - "package.rename is defined"
+       - "package.rename is not none"
+       - "package.rename is string"
+       - "package.rename is not mapping" 
+       - "package.rename|length > 0"
+       - "package.original is defined"
+       - "package.original is not none"
+       - "package.original is string"
+       - "packager.original is not mapping"
+       - "package.original|length > 0"
+  
+  when:
+    - "package.src is defined"
+    - "package.src is not none"
+    - "package.src is string"
+
+###########################################
+#  TEMPLATES
+###########################################
+- block:
+
+   - name: "Dump Configuration File"
+     include_tasks: "dumpConfig.yml"

@@ -1,0 +1,54 @@
+{#############################################################################
+#                  ANSIBLE GENERATED GRAV USER FILE
+# ----------------------------------------------------------------------------
+# Author: Cesar Delgado
+# Date:   06-02-2025
+# Version: 1.0
+#############################################################################}
+{%- if grav_user is defined -%}
+{%-   if grav_user is not none -%}
+{%-      if grav_user is not string -%}
+{%-         if grav_user is mapping -%}
+{%-            if grav_user is iterable -%}
+{%-               if grav_user|length > 0 -%}
+state: enabled
+email: "{{ grav_user.email | default('cesar.econocom@gmail.com') }}"
+access:
+{%     if grav_user.adminuser is defined  %}
+{%         if grav_user.adminuser is not none  %}
+{%            if grav_user.adminuser is true  %}
+  admin:
+    login: true
+    super: true
+{%             endif %}
+{%          endif %}
+{%       endif %}
+  site:
+    login: true
+fullname: "{{ grav_user.fullname | default('Cesar Delgado') }}" 
+title:    "{{ grav_user.title    | default('Developer') }}" 
+
+{%         if grav_user.password is defined  %}
+{%            if grav_user.password is not none  %}
+password: "{{ grav_user.password | default('Training_2025') }}" 
+{%             endif %}
+{%          endif %}
+
+
+{%         if grav_user.hashed_password is defined  %}
+{%            if grav_user.hashed_password is not none  %}
+hashed_password: "{{ grav_user.hashed_password  | default('$2y$10$B7eEPyeiWQe9X3nyEnSCU.F03mOhp7KDP2BvBtvNFH6SVBauT5C.C') }}"
+{%             endif %}
+{%          endif %}
+
+
+{%-             endif -%}
+{%-           endif -%}
+{%-         endif -%}
+{%-       endif -%}
+{%-    endif -%}
+{%- endif -%}
+
+{#############################################################################
+#                    ANSIBLE GENERATED GRAV USER FILE
+#############################################################################}

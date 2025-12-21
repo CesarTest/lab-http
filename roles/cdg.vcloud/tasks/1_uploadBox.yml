@@ -1,0 +1,30 @@
+---
+######################################################################
+#                      META-DATA CREATION
+######################################################################
+- name: "BOX META-DATA CREATION"
+  vars:
+    upload_path: "{{ vcloud_work_path | default('/tmp/vcloud') }}"
+    upload_name: "{{ (vcloud_box.name | default('rhcsa/centos9')) | regex_replace('/', '-') }}.json"
+    upload_dest: "{{ upload_path }}/{{ upload_name }}"
+  block:
+    - name: "Create Box Meta-Data at |{{ upload_dest | default('Empty') }}|"
+      template:
+        src: "metadata.j2"
+        dest:  "{{ upload_dest  | default('')     }}" 
+        owner: "{{ apache_user  | default('root') }}"
+        group: "{{ apache_group | default('root') }}"    
+  
+######################################################################
+#                           BOX UPLOAD
+######################################################################
+- name: "BOX UPLOAD"
+  block:
+    - name: "Upload All versions of a Box"
+      include_tasks: "2_uploadVersion.yml"
+      loop: "{{ box_versions }}"
+      loop_control:
+        loop_var: "box_version"
+      vars:
+        box_versions: "{{ vcloud_box.versions | default([]) }}"
+

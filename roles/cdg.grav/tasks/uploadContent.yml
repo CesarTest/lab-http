@@ -1,0 +1,33 @@
+---
+#################################
+#            REFRESH
+#################################
+
+- name: "Delete Old Contents |{{ site_upload_dest | default('Empty')}}|"
+  file:
+    path: "{{ site_upload_dest | default('') }}"
+    state: "absent"
+  when:
+    - "site_content.refresh is defined"
+    - "site_content.refresh is not none"
+    - "site_content.refresh|bool is true"
+
+- name: "Create Content Folder |{{ site_upload_dest | default('Empty')}}|"
+  file:
+    path: "{{ site_upload_dest | default('') }}"
+    state: "directory"
+    recurse: "true"
+    owner: "{{ apache_user | default('apache')}}"
+    group: "{{ apache_group | default('apache') }}"
+
+#################################
+#            UPLOAD
+#################################
+- name: "Create Content Folder |{{ site_content.src | default('') }}| -> |{{ site_upload_dest | default('Empty')}}|"
+  copy:
+    src: "{{ site_content.src | default('') }}"
+    dest: "{{ (site_upload_dest | default(''))| dirname }}"
+    owner: "{{ apache_user | default('apache')}}"
+    group: "{{ apache_group | default('apache') }}"
+    force: "{{ site_content.force | default(true) }}"
+

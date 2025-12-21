@@ -1,0 +1,21 @@
+---
+- name: "PREPARE VAGRANT CLOUD"
+  block:
+
+    - name: "Upload validated Boxes"
+      include_tasks: "1_uploadBox.yml"    
+      loop: "{{ vcloud_boxes | default([]) }}"
+      loop_control:
+        loop_var: "vcloud_box"
+
+  rescue:
+    - name: "ERROR - PREPARING VAGRANT CLOUD"
+      debug:
+        msg: 
+        - "Missing Definitions: |vcloud_boxes|"
+        - "{{ vcloud_boxes | default('Empty Value')}}"
+
+
+
+
+

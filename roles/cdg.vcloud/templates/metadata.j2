@@ -1,0 +1,50 @@
+{#############################################################################
+#                  ANSIBLE GENERATED VAGRANT BOX METADATA FILE
+# ----------------------------------------------------------------------------
+# Author: Cesar Delgado
+# Date:   06-02-2025
+# Version: 1.0
+#############################################################################} 
+{%- if vcloud_box is defined -%}
+{%-   if vcloud_box is not none -%}
+{%-      if vcloud_box is not string -%}
+{%-         if vcloud_box is mapping -%}
+{%-            if vcloud_box is iterable -%}
+{%-               if vcloud_box|length > 0 -%}
+{
+    "name": "{{ vcloud_box.name | default('lab/centos9')}}",
+    "description": "{{ vcloud_box.description | default('Vagrant Box')}}",
+    "versions": [
+{%-  for versions in (vcloud_box.versions |default([])) -%}
+                    {
+                       "version": "{{ versions.version | default('0.1.0')  }}",
+                       "providers": [
+       {%-  for provider in (versions.providers|default([])) -%}
+                            {
+                                   "name": "{{ provider.name | default('virtualbox') }}"
+								 , "architecture":"{{provider.architecture|default('amd64')}}" 								 
+                                 , "url":  "{{ vcloud_url | default('http://localhost') }}/{{ provider.dest | default(vcloud_box.name + '/vagrant.box') }}"
+                                 {%- if provider.checksum is defined -%}
+                                   {%-   if provider.checksum is not none -%}	
+								       {%-   if provider.checksum is string -%}
+								 , "checksum": "{{ provider.checksum | default('') }}"
+                                 , "checksum_type":  "{{ provider.checksum | default('sha256') }}"					 
+									   {%- endif -%}
+								   {%- endif -%}
+							     {%- endif -%}
+                            }{%- if not loop.last -%},{%- endif -%}
+       {%- endfor -%}	   
+                       ]
+                     }{%- if not loop.last -%},{%- endif -%}					 
+{%- endfor -%}
+    ]
+}
+{%-             endif -%}
+{%-           endif -%}
+{%-         endif -%}
+{%-       endif -%}
+{%-    endif -%}
+{%- endif -%}
+{#############################################################################
+#               ANSIBLE GENERATED VAGRANT BOX META-DATA FILE 
+#############################################################################} 

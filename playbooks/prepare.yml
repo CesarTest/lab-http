@@ -1,0 +1,175 @@
+---
+######################################################
+#   SELINUX
+######################################################
+  - name: "PREPARE SERVER - STAGE 1: Selinux"
+    block:
+      - name: "SELinux Python Dependencies"
+        ignore_errors: yes
+        become: yes
+        package:
+          name:
+            - policycoreutils-python3 
+          state: present 
+        
+      - name: "SELinux Mode" 
+        become: yes
+        selinux:
+          policy:      "{{server_selinux_mode.policy     | default(omit)}}"
+          state:       "{{server_selinux_mode.state      | default(omit)}}"
+          configfile:  "{{server_selinux_mode.configfile | default(omit)}}"
+          update_kernel_param: "{{ server_selinux_mode.selinux_update_kernel_param | default(omit)}}"
+        ignore_errors: yes 
+        register: "selinux_mode_switch"
+        when:
+          - "server_selinux_mode is defined"
+          - "server_selinux_mode.state is defined"
+          - "server_selinux_mode.state is string"
+            
+      - name: "Rebooting when SELinux Mode changed"
+        reboot:
+        become: yes
+        ignore_errors: yes 
+        when:
+          - "selinux_mode_switch is defined"
+          - "selinux_mode_switch is not none"    
+          - "(selinux_mode_switch.reboot_required is defined)"
+          - "(selinux_mode_switch.reboot_required is not none)"
+          - "(selinux_mode_switch.reboot_required is true) "
+
+      - name: "SElinux Policies"
+        sefcontext:
+          target:     "{{ selinux_policy.target     | default(omit)}}"
+          substitute: "{{ selinux_policy.substitute | default(omit)}}"
+          state:      "{{ selinux_policy.state      | default(omit)}}"  
+          ftype:      "{{ selinux_policy.fftyp      | default(omit)}}"
+          ignore_selinux_state: "{{ selinux_policy.ignore_selinux_state | default(omit)}}"
+          reload:  "{{ selinux_policy.reload        | default(omit)}}"
+          selevel: "{{ selinux_policy.selevel       | default(omit)}}"
+          setype:  "{{ selinux_policy.setype        | default(omit)}}"
+          seuser:  "{{ selinux_policy.seuser        | default(omit)}}"
+        register: selinux_apply_policy
+        loop: "{{ server_selinux_policies | default([]) }}"
+        loop_control:
+          loop_var: "selinux_policy"
+        when:
+          - "server_selinux_policies is defined"
+          - "server_selinux_policies is not none"
+          - "server_selinux_policies is not string"
+          - "server_selinux_policies is not mapping"
+          - "server_selinux_policies is iterable"
+
+      - name   : "Apply SELinux Policies to target"            
+        shell  : "restorecon -irv {{ secontext | default('.') }}"
+        become: true
+        ignore_errors: yes
+        loop: "{{ selinux_apply_policy.results | default([]) }}"
+        loop_control:
+          loop_var: "selinux_apply"
+        vars:
+          secontext: "{{ (selinux_apply.target | default('.')) | dirname | dirname }}"
+        when:
+          - "selinux_apply_policy.results is defined"
+          - "selinux_apply_policy.results is not none"    
+          - "selinux_apply.changed is defined"
+          - "selinux_apply.changed is not none"     
+
+
+
+######################################################
+# SERVER SERVICES 
+######################################################
+  - name: "PREPARE SERVER - STAGE 2: Server Services"
+    block:
+      - name: 'Enable/Disable Server Services'
+        ignore_errors: yes
+        service:
+          name:   "{{ server_service.name }}"
+          state:  "{{ server_service.state | default('stopped') }}" 
+          enabled: "{{ server_service.state | bool }}" 
+        loop: "{{ server_services | default([]) }}"
+        loop_control:
+          loop_var: "server_service"
+        when: 
+          - "server_services is defined"
+          - "server_services is not none"
+          - "server_services is not string"
+          - "server_services is not mapping"
+          - "server_service.name is defined"
+          - "server_service.name is not none"
+          - "server_service.name is string"  
+          #- ansible_facts.services[server_service.name] is defined
+
+      - name: "Apply Firewall Rules"
+        ignore_errors: yes
+        firewalld:
+          port:      "{{firewall_rule.port   | default(omit) }}"
+          service:   "{{firewall_rule.service| default(omit) }}"
+          state:     "{{firewall_rule.state  | default(omit) }}"
+          permanent: "{{firewall_rule.permanent | default(omit) }}"
+          immediate: "{{firewall_rule.immediate | default(omit) }}"
+          offline:   "{{firewawall_rule.offline | default(omit) }}"
+        loop: "{{ server_firewall_rules | default([]) }}"
+        loop_control:
+          loop_var: "firewall_rule"
+        when:
+          - "server_firewall_rules is defined"
+          - "server_firewall_rules is not none"
+          - "server_firewall_rules is not string"
+          - "server_firewall_rules is iterable"
+          - "server_firewall_rules is not mapping"
+          - "(firewall_rule.port is defined) or (firewall_rule.service is defined)"
+          - "(firewall_rule.port is not none) or (firewall_rule.service is not none)"
+
+######################################################
+# WEB FOLDERS
+######################################################
+  - name: "PREPARE SERVER - STAGE 3:  Web Folders"
+    vars:
+      vhost_documentroot: "{{ ((apache_vhosts|default([])) | map(attribute='documentroot') ) | default([]) }}"
+      vhost_names: "{{ (vhost_documentroot | map('basename') | list) | default([]) }}"
+      vhost_logs: "{{  [] | zip_longest(vhost_names, fillvalue=apache_logs + '/') | map('join') | list  }}"
+      folders: "{{ (vhost_logs|default([])) +(vhost_documentroot|default([])) }}"
+    block:
+      - name: "Create a user |{{ apache_user | default('Empty=root') }}|:|{{ apache_group | default('Empty=root') }}|"
+        user:
+          name:    "{{ userproperties.username | default(omit) }}"
+          groups:  "{{ userproperties.usergroup| default(omit) }}"
+          shell:   "{{ userpropeties.usershell | default(omit) }}"
+          create_home: "{{userproperties.create_home | default(omit)}}"
+        loop:
+          - username:  "{{apache_user |default('root')}}"
+            usergroup: "{{apache_group|default('root')}}"
+            usershell: "{{apache_shell|default('/sbin/nologin')}}"
+            create_home: "yes"
+          - username:  "{{php_user    |default('root')}}"
+            usergroup: "{{php_group   |default('root')}}"
+            usershell: "{{apache_shell|default('/sbin/nologin')}}"
+            create_home: "yes"
+
+        loop_control:
+          loop_var: "userproperties"
+
+      - name: "Remove vhost directory according apache_refresh flag"
+        file:
+          path: "{{ vhost_www_folder | default('/tmp') }}"
+          state: "absent"
+        loop: "{{ folders | default([]) }}"
+        loop_control:
+          loop_var: "vhost_www_folder"  
+        when:
+         - "apache_refresh is defined"
+         - "apache_refresh is not none"
+         - "apache_refresh is boolean"
+         - "apache_refresh is true"
+
+      - name: "Create vhost directory if they don't exist"
+        file:
+           path: "{{ vhost_www_folder | default('/tmp') }}"
+           state: "directory"
+           recurse: "true"
+           owner: "{{ apache_user | default('root') }}"
+           group: "{{ apache_group | default('root') }}"
+        loop: "{{ folders | default([]) }}"
+        loop_control: 
+           loop_var: "vhost_www_folder"

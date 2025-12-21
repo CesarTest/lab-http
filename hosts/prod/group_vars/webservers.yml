@@ -1,0 +1,579 @@
+---
+#########################################################
+##             GLOBAL PROPERTIES
+##########################################################
+server_domain: "maas.lab"
+apache_work_path: "/var/www/html"
+apache_logs: "/var/log/httpd"
+apache_refresh: yes
+
+#########################################################
+#            SERVER PROPERTIES
+#########################################################
+server_services:
+  - name: "firewalld"
+    enabled: yes 
+    state: "started"
+
+server_selinux_mode:      
+   policy: "targeted"
+   state: "enforcing"
+
+server_selinux_policies:
+  - target: "{{apache_work_path | default('/var/www/html') }}(/.*)?"
+    setype: "httpd_sys_rw_content_t"
+    seuser: "unconfined_u"
+    state: "present"
+
+server_firewall_rules:
+  - service: "http"
+    permanent: true
+    state: "enabled"
+
+  - service: "https"
+    permanent: true
+    state: "enabled"
+
+#########################################################
+#            APACHE SERVER CONFIGURATIONS
+#########################################################
+apache_user: "apache"
+apache_shell: "/bin/bash"
+apache_group: "{{ apache_user | default('apache')}}"
+apache_create_vhosts: true
+apache_vhosts_filename: "vhosts.conf"
+apache_vhosts_template: "vhosts.conf.j2"
+apache_global_vhost_settings: |
+  DirectoryIndex index.php index.html
+apache_allow_override: "All"
+apache_options: "All Indexes FollowSymLinks"
+# Los modulos pueden romper la instalacion, si las dependencias estan mal.
+#apache_mods_enabled:
+#    - rewrite
+#    - ssl
+#    - mpm_itk_module
+apache_mods_disabled: []
+apache_vhosts:
+  - servername: "vcloud.{{server_domaini|default('maas.lab')}}"
+    documentroot: "{{apache_work_path|default('/var/www/html')}}/vcloud"  
+    serveradmin: "cesar.econocom@gmail.com"
+    serveralias: "www.vcloud.{{server_domain|default('maas.lab')}}" 
+    extra_parameters:  |
+         ErrorLog  {{apache_logs|default('/var/log/httpd')}}/vcloud/error.log  
+         CustomLog {{apache_logs|default('/var/log/httpd')}}/vcloud/access.log combined  
+  - servername: "training.{{server_domain|default('maas.lab')}}"
+    documentroot: "{{apache_work_path|default('/var/www/html')}}/training"
+    serveradmin: "cesar.econocom@gmail.com"
+    serveralias: "www.training.{{server_domain|default('maas.lab')}}"
+    extra_parameters:  |
+         ErrorLog  {{apache_logs|default('/var/log/httpd')}}/training/error.log
+         CustomLog {{apache_logs|default('/var/log/httpd')}}/training/access.log combined     
+
+
+#########################################################
+#            PHP CONFIGURATIONS FOR GRAV
+#########################################################
+#------------
+# 1.- Main Config
+#------------
+php_user:  "{{apache_user | default('apache') }}"
+php_group: "{{php_user    | default('apache') }}"
+php_install_from_source: false
+php_enable_webserver: true
+php_webserver_daemon: "httpd"
+php_packages_state: "present"
+php_install_recommends: true
+php_executable: "php"
+php_packages:
+    - php
+    - php-cli
+    - php-common
+    - php-devel
+    - php-gd
+    - php-mbstring
+    - php-pdo
+    - php-pecl-apcu
+    - php-xml
+    - php-curl 
+    - php-ctype
+    - php-dom
+    - php-gd
+    - php-json
+    - php-mbstring
+    - php-openssl
+    - php-session
+    - php-simplexml
+    - php-xml
+    - php-zip
+
+#------------
+# 2.- PHP ini
+#------------- 
+php_memory_limit: "128M"
+php_max_execution_time: "90"
+php_upload_max_filesize: "256M"
+
+#---------
+# 3.- OPT Cache
+#--------
+php_opcache_zend_extension: "opcache.so"
+php_opcache_enable: "1"
+php_opcache_enable_cli: "0"
+php_opcache_memory_consumption: "96"
+php_opcache_interned_strings_buffer: "16"
+php_opcache_max_accelerated_files: "4096"
+php_opcache_max_wasted_percentage: "5"
+php_opcache_validate_timestamps: "1"
+php_opcache_revalidate_path: "0"
+php_opcache_revalidate_freq: "2"
+php_opcache_max_file_size: "0"  
+
+#########################################################
+#                  WEB CONTENTS DEFINTIONS
+#########################################################
+
+# -------------------------------------------------------
+# 1.- Vagrant Virtual Boxes
+# -------------------------------------------------------
+vcloud_work_path: "{{apache_work_path|default('/var/www/html/training')}}/vcloud"
+vcloud_url: "http://vcloud.{{server_domain|default('maas.lab')}}"
+vcloud_boxes:
+  - name: "lab/centos9"
+    description: "CentOS Stream 9"
+    architecture: "amd64"    
+    versions:
+       - version: "4.3.12"
+         providers:
+           - name: "virtualbox"
+             src:  "centos9/virtualbox.box"
+             dest: "lab/boxes/centos9/versions/4.3.12/providers/virtualbox/amd64/vagrant.box"
+#           - name: "libvirt"
+#             src:  "centos9/libvirt.box"
+#             dest: "lab/boxes/centos9/versions/4.3.12/providers/libvirt/amd64/vagrant.box"             
+#  - name: "lab/rhel86"
+#    description: "RedHat Enterprise Linux 8.6"
+#    versions:
+#       - version: "3.6.10"
+#         providers:
+#           - name: "virtualbox"
+#             src:  "rhel86/virtualbox.box"
+#             dest: "lab/boxes/rhel8/versions/3.6.10/providers/virtualbox/amd64/vagrant.box"
+##             dest: "lab/boxes/centos8/versions/4.3.12/providers/virtualbox/amd64/vagrant.box"
+#           - name: "libvirt"
+#             src:  "centos9/libvirt.box"
+#             dest: "lab/boxes/centos8/versions/4.3.12/providers/libvirt/amd64/vagrant.box"     
+#  - name: "lab/centos7"
+#    description: "CentOS Stream 7"
+#    versions:
+#       - version: "4.3.12"
+#         providers:
+#           - name: "virtualbox"
+#             src:  "centos7/virtualbox.box"
+#             dest: "lab/boxes/centos7/versions/4.3.12/providers/virtualbox/amd64/vagrant.box"
+#           - name: "libvirt"
+#             src:  "centos/libvirt.box"
+#             dest: "lab/boxes/centos7/versions/4.3.12/providers/libvirt/amd64/vagrant.box"  
+#  - name: "lab/centos6"
+#    description: "CentOS Stream 6"
+#    versions:
+#       - version: "4.3.12"
+#         providers:
+#           - name: "virtualbox"
+#             src:  "centos6/virtualbox.box"
+#             dest: "lab/boxes/centos7/versions/4.3.12/providers/virtualbox/amd64/vagrant.box"
+#           - name: "libvirt"
+#             src:  "centos/libvirt.box"
+#             dest: "lab/boxes/centos6/versions/4.3.12/providers/libvirt/amd64/vagrant.box"  
+
+# -------------------------------------------------------
+# 2.- Grav Installation
+# -------------------------------------------------------
+#  2.1.- Install GRAV
+grav_work_path: "{{apache_work_path|default('/var/www/html') }}/training"
+grav_users_path: "{{ grav_work_path }}/user/accounts" 
+
+# 2.2.- Grav Customizations (password=Training_2025)
+grav_users:
+  - username: "cdg"
+    fullname: "Cesar Delgado"
+    adminuser: yes
+    hashed_password: "$2y$10$B7eEPyeiWQe9X3nyEnSCU.F03mOhp7KDP2BvBtvNFH6SVBauT5C.C"
+    email: "cesar.econocom@gmail.com"
+    title: "Administrador"
+
+# 2.3.- Grav Deploy
+grav_deploy:
+
+  - name: "Learn2 Skeleton"
+    src: "install/learn2-skeleton.zip"
+    dest: "{{ grav_work_path | default('/tmp') }}"
+    template:
+      dest: "/etc/hosts"
+      content: |
+        172.30.115.21 gitlab.proteo.internal
+        172.30.237.188 vcloud.maas.lab
+        172.30.237.188 training.maas.lab
+
+  - name: "Learn4 Theme"
+    src: "themes/learn4-theme.zip"
+    dest: "{{ grav_work_path | default('/tmp') }}/user/themes" 
+    rename: "learn4"
+    original: "grav-theme-learn4-develop"
+    template:
+      dest: "{{ grav_work_path | default('/tmp') }}/user/config/themes/maas.yaml"
+      content: |
+         enabled: true
+         top_level_version: false
+         github:
+           position: top
+         default_taxonomy_category: docs
+         streams:
+            schemes:
+               theme:
+                  type: ReadOnlyStream
+                  prefixes: 
+                    '': [user/themes/maas,user/themes/learn4]
+         style: default
+         hide_site_title: false
+         enable_doc_versioning: false
+
+  - name: "Quark Theme"
+    src: "themes/quark.zip"
+    dest: "{{ grav_work_path | default('/tmp') }}/user/themes"
+    rename: "quark"
+    original: "grav-theme-quark-develop"
+    template:
+      dest: "{{ grav_work_path | default('/tmp') }}/user/config/themes/labs.yaml"
+      content: |
+        enabled: true                 # Enable the theme
+        production-mode: true         # In production mode, only minified CSS is used. When disabled, nested CSS with sourcemaps are enabled
+        grid-size: grid-lg            # The max-width of the theme, options include: `grid-xl`, `grid-lg`, and `grid-md`
+        header-fixed: true            # Cause the header to be fixed at the top of the browser
+        header-animated: true         # Allows the fixed header to resize to a smaller header when scrolled
+        header-dark: true             # Inverts the text/logo to work better on dark backgrounds
+        header-transparent: true      # Allows the fixed header to be transparent over the page
+        sticky-footer: false          # Causes the footer to be sticky at the bottom of the page
+        blog-page: '/blog'            # The route to the blog listing page, useful for a blog style layout with sidebar
+        custom_logo:                  # A custom logo rather than the default (see below)  
+        custom_logo_mobile:           # A custom logo to use for mobile navigation'
+
+  - name: "Quick Menu Plugin"
+    src: "plugins/page-toc.zip"
+    dest: "{{ grav_work_path | default('/tmp') }}/user/plugins"
+    rename: "page-toc"
+    original: "grav-plugin-page-toc-master"
+    template:
+      dest: "{{ grav_work_path | default('/tmp') }}/user/config/plugins/page-toc.yaml"
+      content: |
+        enabled: true               # Plugin enabled
+        include_css: true           # Include CSS
+        active: true                # Anchor IDs processed and generated for all pages
+        templates:                  # Templates for which anchors should be generated if default is disabled
+        start: 1                    # Start header tag level (1 = h1) for TOC
+        depth: 6                    # Depth from start (2 = 2 levels deep) for TOC
+        hclass:                     # Custom Header TOC styling classes
+        anchors:                    # Anchor configuration
+          start: 1                  # Start header tag level (1 = h1)
+          depth: 6                  # Depth from start (2 = 2 levels deep)
+          link: true                # Enabled auto-generation of clickable link with fragment
+          aria: Anchor              # Aria label to use
+          class:                    # Custom Header anchor styling classes
+          icon: '#'                 # Icon to use, can be a symbol, emoji, ascii etc.
+          position: after           # Position to put the anchor, `before|after`
+          copy_to_clipboard: true   # Copy to clipboard functionality (coming soon)
+          slug_maxlen: 25           # Max length of slugs used for anchors
+          slug_prefix:              # A prefix used in front of generated slugs              
+
+  - name: "SSH Keys - Root User"
+    src: "install/.ssh/"
+    dest: "/root/.ssh/"
+    owner: "root"
+    group: "root"
+    refresh: yes
+    folder_mode: "0700"
+    mode: "0600"
+    isTarball: no
+    template:
+      dest: "/root/.ssh/config"
+      mode: "0600"
+      owner: "root"
+      content: |
+        Host *
+          KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
+          HostKeyAlgorithms +ssh-rsa,ssh-dss
+
+        Host 172.30.115.21
+          ProxyCommand ssh root@172.30.246.230 nc %h %p
+          User cdelgadog
+
+        Host gitlab.proteo.internal
+          ProxyCommand ssh root@172.30.246.230 nc %h %p
+          User cdelgadog
+
+  - name: "SSH Keys - Apache User"
+    src: "install/.ssh/"
+    dest: "/usr/share/httpd/.ssh/"
+    owner: "{{apache_user|default('apache')}}"
+    group: "{{apache_user|default('apache')}}"
+    mode: "0600"
+    folder_mode: "0700"
+    refresh: yes
+    isTarball: no
+    template:
+      dest: "/usr/share/httpd/.ssh/config"
+      content: |
+        Host *
+          KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
+          HostKeyAlgorithms +ssh-rsa,ssh-dss
+        
+        Host 172.30.115.21
+          ProxyCommand ssh root@172.30.246.230 nc %h %p
+          User cdelgadog
+
+        Host gitlab.proteo.internal
+          ProxyCommand ssh root@172.30.246.230 nc %h %p
+          User cdelgadog
+
+# 2.4.- Grav Sites
+grav_multisite: "setup_subdirectory"
+grav_multisite_path:
+  - "linux"
+  - "openshift"
+  - "maas"
+   
+grav_sites:
+  - title: "MaaS Training Labs"
+    path: "home"
+    root: yes
+    
+    contents:
+      - src: "sites/home/themes/labs"
+        dest: "themes/labs"
+        refresh: yes 
+      - src: "sites/linux/themes/maas"
+        dest: "themes/maas"
+        refresh: yes         
+      - src: "sites/home/pages"
+        dest: "pages"
+        refresh: yes        
+    
+    configs:
+      - file: "../.htaccess"
+        regexp: "RewriteBase"
+        line: "RewriteBase /"      
+      - file: "config/system.yaml" 
+        regexp: 'theme:' 
+        line: '  theme: "labs"'
+      - file: "config/site.yaml"
+        regexp: 'title:'
+        line: 'title: "MaaS Training Labs"'
+      - file: "config/system.yaml"
+        regexp: 'alias:'
+        line: '  alias: /home'
+      - file: "themes/labs/labs.yaml"
+        regexp: 'home_url:'
+        line: "home_url:  http://training.{{server_domain|default('maas.lab')}}"          
+ 
+  - title: "RedHat Enterprise Linux Certifications"
+    path: "{{grav_multisite_path[0]|default('linux')}}"
+    
+    contents:
+      - src: "sites/{{grav_multisite_path[0]|default('linux')}}/pages" 
+        dest: "pages"
+        refresh: yes
+      - src: "sites/{{grav_multisite_path[0]|default('linux')}}/images"
+        dest: "images"
+        refresh: yes
+        
+    configs:
+      - file: "config/system.yaml"
+        regexp: 'theme:'
+        line: '  theme: "maas"'
+      - file: "config/site.yaml"
+        regexp: 'title:'
+        line: 'title: "RedHat Enterprise Linux"'
+      - file: "config/system.yaml"
+        regexp: 'alias:'
+        line: '  alias: /objetivos'
+      - file: "themes/learn4/learn4.php"
+        regexp: " ?: 'purple';"
+        line: "           $color = filter_input(INPUT_COOKIE, 'sidebar-pref') ?: 'green';"
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "placeholder: https://github.com/user/repository.git"
+        line: "      placeholder: https://gitlab.proteo.internal/cdelgadog/{{grav_multisite_path[0]|default('linux')}}-doc.git"
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "gituser: Use Git User Name"
+        line:   "        gituser: cdelgadog"
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "gitsync: Use GitSync Committer Name"
+        line:   "        gitsync: cdelgadog"
+
+    dumps:
+      - template: 
+           dest: "plugins/git-sync/git-sync.yaml"
+           content: |
+              enabled: true
+              folders:
+               - pages
+              SyncNotice: null
+              sync:
+                on_save: true
+                on_delete: true
+                on_media: true
+                cron_enable: false
+                cron_at: '0 12,23 * * *'
+              local_repository: null
+              repository: 'git@gitlab.proteo.internal:cdelgadog/linux-doc.git'
+              no_user: '1'
+              user: null
+              password: null
+              webhook: /_git-sync-6b113cfd91d1
+              webhook_enabled: '0'
+              webhook_secret: e5e95756fb10abb90faef3fc4a3f2e4eb87a5d951bf5f2b2
+              branch: master
+              remote:
+                name: origin
+                branch: master
+              git:
+                author: gituser
+                message: '(Grav GitSync) Automatic Commit'
+                name: GitSync
+                email: git-sync@trilby.media
+                bin: git
+                ignore: null
+                private_key: null
+              logging: false
+
+  - title: "RedHat OpenShift Certifications"
+    path: "{{grav_multisite_path[1]|default('openshift')}}"
+    
+    contents:
+      - src: "sites/{{grav_multisite_path[1]|default('openshift')}}/pages" 
+        dest: "pages"
+        refresh: yes
+      - src: "sites/{{grav_multisite_path[1]|default('openshift')}}/images"
+        dest: "images"
+        refresh: yes
+        
+    configs:
+      - file: "config/system.yaml"
+        regexp: 'theme:'
+        line: '  theme: "maas"'
+      - file: "config/site.yaml"
+        regexp: 'title:'
+        line: 'title: "RedHat OpenShift"'
+      - file: "config/system.yaml"
+        regexp: 'alias:'
+        line: '  alias: /objetivos'
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "placeholder: https://github.com/user/repository.git"
+        line: "      placeholder: https://gitlab.proteo.internal/cdelgadog/{{grav_multisite_path[1]|default('openshift')}}-doc.git"
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "gituser: Use Git User Name"
+        line:   "        gituser: cdelgadog"
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "gitsync: Use GitSync Committer Name"
+        line:   "        gitsync: cdelgadog"
+
+    dumps:
+      - template: 
+           dest: "plugins/git-sync/git-sync.yaml"
+           content: |
+              enabled: true
+              folders:
+               - pages
+              SyncNotice: null
+              sync:
+                on_save: true
+                on_delete: true
+                on_media: true
+                cron_enable: false
+                cron_at: '0 12,23 * * *'
+              local_repository: null
+              repository: 'git@gitlab.proteo.internal:cdelgadog/openshift-doc.git'
+              no_user: '1'
+              user: null
+              password: null
+              webhook: /_git-sync-6b113cfd91d1
+              webhook_enabled: '0'
+              webhook_secret: e5e95756fb10abb90faef3fc4a3f2e4eb87a5d951bf5f2b2
+              branch: master
+              remote:
+                name: origin
+                branch: master
+              git:
+                author: gituser
+                message: '(Grav GitSync) Automatic Commit'
+                name: GitSync
+                email: git-sync@trilby.media
+                bin: git
+                ignore: null
+                private_key: null
+              logging: false
+                      
+  - title: "MaaS Linux Labs"
+    path: "{{grav_multisite_path[2]|default('maas')}}"
+    
+    contents:
+      - src: "sites/{{grav_multisite_path[2]|default('maas')}}/pages" 
+        dest: "pages"
+        refresh: yes
+      - src: "sites/{{grav_multisite_path[2]|default('maas')}}/images"
+        dest: "images"
+        refresh: yes
+        
+    configs:
+      - file: "config/system.yaml"
+        regexp: 'theme:'
+        line: '  theme: "maas"'
+      - file: "config/site.yaml"
+        regexp: 'title:'
+        line: 'title: "MaaS Linux Labs"'
+      - file: "config/system.yaml"
+        regexp: 'alias:'
+        line: '  alias: /objetivos'
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "placeholder: https://github.com/user/repository.git"
+        line: "      placeholder: https://gitlab.proteo.internal/cdelgadog/{{grav_multisite_path[2]|default('maas')}}-doc.git"
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "gituser: Use Git User Name"
+        line:   "        gituser: cdelgadog"
+      - file: "plugins/git-sync/blueprints.yaml"
+        regexp: "gitsync: Use GitSync Committer Name"
+        line:   "        gitsync: cdelgadog"
+
+    dumps:
+      - template: 
+           dest: "plugins/git-sync/git-sync.yaml"
+           content: |
+              enabled: true
+              folders:
+               - pages
+              SyncNotice: null
+              sync:
+                on_save: true
+                on_delete: true
+                on_media: true
+                cron_enable: false
+                cron_at: '0 12,23 * * *'
+              local_repository: null
+              repository: 'git@gitlab.proteo.internal:cdelgadog/maas-doc.git'
+              no_user: '1'
+              user: null
+              password: null
+              webhook: /_git-sync-6b113cfd91d1
+              webhook_enabled: '0'
+              webhook_secret: e5e95756fb10abb90faef3fc4a3f2e4eb87a5d951bf5f2b2
+              branch: master
+              remote:
+                name: origin
+                branch: master
+              git:
+                author: gituser
+                message: '(Grav GitSync) Automatic Commit'
+                name: GitSync
+                email: git-sync@trilby.media
+                bin: git
+                ignore: null
+                private_key: null
+              logging: false              
