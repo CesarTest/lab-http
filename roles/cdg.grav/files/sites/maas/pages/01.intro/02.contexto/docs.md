@@ -21,11 +21,11 @@ El repositorio [Iron Bank](https://p1.dso.mil/iron-bank?target=_blank)  homologa
 
 
 ### Consumidor: Platform One
-[Platform One](https://p1.dso.mil/?target=_blank) es una plataforma de ejecución de eaplicación agnóstica del hardware físico (un avión, un barco, un submarino, una nube, etc.).
+[Platform One](https://p1.dso.mil/?target=_blank) es una plataforma de ejecución de aplicaciones estandarizada que permite ejectuar el mismo código sobre un avión, un barco, un submarino, una nube, etc.
 ![Plataforma Ejecución](image://intro/plataforma.jpg) 
 
 ## Ecosistema de Fábricas Software
-El resultado final es un ecosistema de fábricas que trabajan de manera coordinada para suministrar las piezas necesarias que hay que ensamblar en la producción de sistemas finales (planos de control de distintas infraestructuras críticas). 
+El resultado final es un ecosistema de fábricas que trabajan de manera coordinada para suministrar las piezas necesarias que hay que ensamblar para construir distintos sistemas finales (que siempre son planos de control de las distintas infraestructuras críticas que tiene todo sistema social). 
 ![Ecosistema](image://intro/ecosistema.jpg) 
 
 
