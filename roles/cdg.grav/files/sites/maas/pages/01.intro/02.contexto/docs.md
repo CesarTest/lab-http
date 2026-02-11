@@ -6,27 +6,29 @@ taxonomy:
 
 # Ciberseguridad: Los Nuevos Estándares
  
-Hasta ahora la ciberseguridad se basaba en blindar el centro de datos, al margen de lo que éste contenga. Los nuevos estándares, como [NIS2 (Network and Information Security)](https://digital-strategy.ec.europa.eu/en/policies/nis2-directive?target=_blank), centran su atención en la calidad de las aplicaciones que están ejecutándose en esos centros datos. Esto implica reestructurar la producción del software en base a dos principios:
+Hasta ahora la ciberseguridad se basaba en blindar el centro de datos, al margen de lo que éste contenga. Los nuevos estándares, como [NIS2 (Network and Information Security)](https://digital-strategy.ec.europa.eu/en/policies/nis2-directive?target=_blank), centran su atención la cadnea de valor del software para garantizar estandares de calidad de las aplicaciones que están ejecutándose en esos centros datos. 
 
-1. **Desacoplar fábrica de operadora:** se habla de cadena de valor del software. Las operadoras siguen su tarea de blindar el entorno de ejecución, las fábricas se desentienden de estas cuestiones para poder centrarse en los problemas del diseño de aplicaciones.
-2. **Calidad en la producción de aplicaciones en fábricas:** en suma, transparencia en esa cadena de valor. El foco gira hacia los procesos de fabricación de esa aplicaciones y sus ingredientes (para poder localizar sus vulnerabilidades). 
+## Cadena de Valor del Software
+![Cadena Valor Software](image://intro/cadena.jpg)
 
-## Principio 1: Desacoplo Fábrica de Operadora
+### Fábricas: Endor Labs
+La plataforma Endor Labs ayuda a controlar los tres elementos de la imagen:
+<div class="grav-youtube"><iframe src="https://www.youtube.com/embed/ONOocXyG7eM" frameborder="0" allowfullscreen=""></iframe></div>
 
-El desacoplo se logra a través de la estandrización de dos elementos: Formato de Entrega de aplicaciones y la plataforma de ejecución (que debe poder desplegarse sobre cualquier hardware, ya sea un avión, un submarino, una nube, etc.). 
-Esta estructuración de la cadena de valor del software aporta una estabilidad al desarrollo de aplicaciones frente a la evolución tecnológica que se torna vital para la evolución de infraestructuras críticas.
- 
-[div class="table"] 
-Formato Entrega|Plataforma Ejecución
----------------|---------------------
-![Formato Entrega](image://intro/entrega.jpg) | ![Plataforma Ejecución](image://intro/plataforma.jpg) 
-[/div]
- 
-## Principio 2: Calidad en la Producción de Aplicaciones 
+### Distribución: Iron Bank
+El repositorio [Iron Bank](https://p1.dso.mil/iron-bank?target=_blank)  homologa y distribuye código de manera centralizada.
+![Formato Entrega](image://intro/entrega.jpg)
 
-Transparencia en los procesos de producción se logra en base dos principios:
-1. **SBOM (Software Bill of Materials) en el Formato de Entrega de Aplicación:** cada pieza software que se libera al repositorio lleva su lista de ingredientes, permitiendo el control de vulnerabilidades de sus dependencias.
-2. **Agilidad en Procesos de Producción:** la automatización (tanto en factoría como en operadora) permite actuar de manera rápida sobre cualquier vulnerabilidad detectada en las aplicaciones.
+
+### Consumidor: Platform One
+[Platform One](https://p1.dso.mil/?target=_blank) es una plataforma de ejecución de eaplicación agnóstica del hardware físico (un avión, un barco, un submarino, una nube, etc.).
+![Plataforma Ejecución](image://intro/plataforma.jpg) 
+
+## Ecosistema de Fábricas Software
+El resultado final es un ecosistema de fábricas que trabajan de manera coordinada para suministrar las piezas necesarias que hay que ensamblar en la producción de sistemas finales (planos de control de distintas infraestructuras críticas). 
+![Ecosistema](image://intro/ecosistema.jpg) 
+
+
 
 # Automatización: La Gestión de Herramientas
 
