@@ -1,5 +1,5 @@
 webservers:
   hosts:
-    172.30.237.188
+    192.168.56.149
   vars:
-    ansible_user: ansible 
+    ansible_user: vagrant

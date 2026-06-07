@@ -284,76 +284,76 @@ grav_deploy:
           slug_maxlen: 25           # Max length of slugs used for anchors
           slug_prefix:              # A prefix used in front of generated slugs              
 
-  - name: "SSH Keys - Root User"
-    src: "install/.ssh/"
-    dest: "/root/.ssh/"
-    owner: "root"
-    group: "root"
-    refresh: yes
-    folder_mode: "0700"
-    mode: "0600"
-    isTarball: no
-    template:
-      dest: "/root/.ssh/config"
-      mode: "0600"
-      owner: "root"
-      content: |
-        Host *
-          KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
-          HostKeyAlgorithms +ssh-rsa,ssh-dss
+  #- name: "SSH Keys - Root User"
+  #  src: "install/.ssh/"
+  #  dest: "/root/.ssh/"
+  #  owner: "root"
+  #  group: "root"
+  #  refresh: yes
+  #  folder_mode: "0700"
+  #  mode: "0600"
+  #  isTarball: no
+  #  template:
+  #    dest: "/root/.ssh/config"
+  #    mode: "0600"
+  #    owner: "root"
+  #    content: |
+  #      Host *
+  #        KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
+  #        HostKeyAlgorithms +ssh-rsa,ssh-dss
+  #
+  #      Host 172.30.115.21
+  #        ProxyCommand ssh root@172.30.246.230 nc %h %p
+  #        User cdelgadog
+  #
+  #      Host gitlab.proteo.internal
+  #        ProxyCommand ssh root@172.30.246.230 nc %h %p
+  #        User cdelgadog
 
-        Host 172.30.115.21
-          ProxyCommand ssh root@172.30.246.230 nc %h %p
-          User cdelgadog
-
-        Host gitlab.proteo.internal
-          ProxyCommand ssh root@172.30.246.230 nc %h %p
-          User cdelgadog
-
-  - name: "SSH Keys - Apache User"
-    src: "install/.ssh/"
-    dest: "/usr/share/httpd/.ssh/"
-    owner: "{{apache_user|default('apache')}}"
-    group: "{{apache_user|default('apache')}}"
-    mode: "0600"
-    folder_mode: "0700"
-    refresh: yes
-    isTarball: no
-    template:
-      dest: "/usr/share/httpd/.ssh/config"
-      content: |
-        Host *
-          KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
-          HostKeyAlgorithms +ssh-rsa,ssh-dss
-        
-        Host 172.30.115.21
-          ProxyCommand ssh root@172.30.246.230 nc %h %p
-          User cdelgadog
-
-        Host gitlab.proteo.internal
-          ProxyCommand ssh root@172.30.246.230 nc %h %p
-          User cdelgadog
+   #- name: "SSH Keys - Apache User"
+   # src: "install/.ssh/"
+   # dest: "/usr/share/httpd/.ssh/"
+   # owner: "{{apache_user|default('apache')}}"
+   # group: "{{apache_user|default('apache')}}"
+   # mode: "0600"
+   # folder_mode: "0700"
+   # refresh: yes
+   # isTarball: no
+   # template:
+   #   dest: "/usr/share/httpd/.ssh/config"
+   #   content: |
+   #     Host *
+   #       KexAlgorithms +diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
+   #       HostKeyAlgorithms +ssh-rsa,ssh-dss
+   #     
+   #     Host 172.30.115.21
+   #       ProxyCommand ssh root@172.30.246.230 nc %h %p
+   #       User cdelgadog
+   #
+   #     Host gitlab.proteo.internal
+   #       ProxyCommand ssh root@172.30.246.230 nc %h %p
+   #       User cdelgadog
 
 # 2.4.- Grav Sites
 grav_multisite: "setup_subdirectory"
 grav_multisite_path:
   - "linux"
   - "openshift"
-  - "maas"
+  - "rhacm"
    
 grav_sites:
-  - title: "MaaS Training Labs"
+  - title: "RedHat Training Labs"
     path: "home"
     root: yes
     
     contents:
-      - src: "sites/home/themes/labs"
+      - src: "sites/redhat/home/themes/labs"
         dest: "themes/labs"
         refresh: yes 
-      - src: "sites/linux/themes/maas"
+      - src: "sites/redhat/linux/themes/maas"
         dest: "themes/maas"
         refresh: yes         
-      - src: "sites/home/pages"
+      - src: "sites/redhat/home/pages"
         dest: "pages"
         refresh: yes        
     
@@ -378,10 +378,10 @@ grav_sites:
     path: "{{grav_multisite_path[0]|default('linux')}}"
     
     contents:
-      - src: "sites/{{grav_multisite_path[0]|default('linux')}}/pages" 
+      - src: "sites/redhat/{{grav_multisite_path[0]|default('linux')}}/pages" 
         dest: "pages"
         refresh: yes
-      - src: "sites/{{grav_multisite_path[0]|default('linux')}}/images"
+      - src: "sites/redhat/{{grav_multisite_path[0]|default('linux')}}/images"
         dest: "images"
         refresh: yes
         
@@ -448,10 +448,10 @@ grav_sites:
     path: "{{grav_multisite_path[1]|default('openshift')}}"
     
     contents:
-      - src: "sites/{{grav_multisite_path[1]|default('openshift')}}/pages" 
+      - src: "sites/redhat/{{grav_multisite_path[1]|default('openshift')}}/pages" 
         dest: "pages"
         refresh: yes
-      - src: "sites/{{grav_multisite_path[1]|default('openshift')}}/images"
+      - src: "sites/redhat/{{grav_multisite_path[1]|default('openshift')}}/images"
         dest: "images"
         refresh: yes
         
@@ -511,14 +511,14 @@ grav_sites:
                 private_key: null
               logging: false
                       
-  - title: "MaaS Linux Labs"
+  - title: "RedHat Advanced Cluster Manager Certifications"
     path: "{{grav_multisite_path[2]|default('maas')}}"
     
     contents:
-      - src: "sites/{{grav_multisite_path[2]|default('maas')}}/pages" 
+      - src: "sites/redhat/{{grav_multisite_path[2]|default('maas')}}/pages" 
         dest: "pages"
         refresh: yes
-      - src: "sites/{{grav_multisite_path[2]|default('maas')}}/images"
+      - src: "sites/redhat/{{grav_multisite_path[2]|default('maas')}}/images"
         dest: "images"
         refresh: yes
         
