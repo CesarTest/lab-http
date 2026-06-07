@@ -298,7 +298,7 @@ grav_sites:
       - src: "sites/{{grav_multisite_path[0]|default('maas')}}/home/themes/labs"
         dest: "themes/labs"
         refresh: yes 
-      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/themes/maas"
+      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/{{grav_multisite_path[0]|default('maas')}}/themes/maas"
         dest: "themes/maas"
         refresh: yes         
       - src: "sites/{{grav_multisite_path[0]|default('maas')}}/home/pages"
@@ -326,10 +326,10 @@ grav_sites:
     path: "{{grav_multisite_path[0]|default('maas')}}"
     
     contents:
-      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/pages" 
+      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/{{grav_multisite_path[0]|default('maas')}}/pages" 
         dest: "pages"
         refresh: yes
-      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/images"
+      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/{{grav_multisite_path[0]|default('maas')}}/images"
         dest: "images"
         refresh: yes
         
