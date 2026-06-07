@@ -295,13 +295,13 @@ grav_sites:
     root: yes
     
     contents:
-      - src: "sites/home/themes/labs"
+      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/home/themes/labs"
         dest: "themes/labs"
         refresh: yes 
-      - src: "sites/maas/themes/maas"
+      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/themes/maas"
         dest: "themes/maas"
         refresh: yes         
-      - src: "sites/home/pages"
+      - src: "sites/{{grav_multisite_path[0]|default('maas')}}/home/pages"
         dest: "pages"
         refresh: yes        
     
