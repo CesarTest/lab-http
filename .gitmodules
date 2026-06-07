@@ -1,3 +1,8 @@
 [submodule "maas"]
-	path = lab-http/roles/cdg.grav/files/sites/maas
+	path = roles/cdg.grav/files/sites/maas
 	url = https://github.com/CesarTest/maas.git
+
+[submodule "redhat"]
+        path = roles/cdg.grav/files/sites/redhat
+        url = https://github.com/CesarTest/redhat.git
+
