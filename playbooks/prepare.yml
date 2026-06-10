@@ -10,6 +10,8 @@
         package:
           name:
             - policycoreutils-python3 
+            - unzip
+            - tar
           state: present 
         
       - name: "SELinux Mode" 
@@ -121,6 +123,11 @@
           - "(firewall_rule.port is defined) or (firewall_rule.service is defined)"
           - "(firewall_rule.port is not none) or (firewall_rule.service is not none)"
 
+      - name: "Always reload firewalld"
+        ansible.builtin.service:
+          name: "firewalld"
+          state: "reloaded"      
+
 ######################################################
 # WEB FOLDERS
 ######################################################
@@ -131,6 +138,15 @@
       vhost_logs: "{{  [] | zip_longest(vhost_names, fillvalue=apache_logs + '/') | map('join') | list  }}"
       folders: "{{ (vhost_logs|default([])) +(vhost_documentroot|default([])) }}"
     block:
+      - name: "Create Group"
+        group:
+          name:  "{{groupname | default(omit) }}" 
+        loop:
+          - "{{apache_group|default('root')}}"
+          - "{{php_group   |default('root')}}"
+        loop_control:
+          loop_var: "groupname"
+
       - name: "Create a user |{{ apache_user | default('Empty=root') }}|:|{{ apache_group | default('Empty=root') }}|"
         user:
           name:    "{{ userproperties.username | default(omit) }}"
